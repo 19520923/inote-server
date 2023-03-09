@@ -2,6 +2,10 @@ import { Router } from 'express'
 import user from './user'
 import auth from './auth'
 import passwordReset from './password-reset'
+import job from './job'
+import interest from './interest'
+import category from './category'
+import note from './note'
 
 const router = new Router()
 
@@ -31,5 +35,9 @@ const router = new Router()
 router.use('/users', user)
 router.use('/auth', auth)
 router.use('/password-resets', passwordReset)
+router.use('/jobs', job)
+router.use('/interests', interest)
+router.use('/categories', category)
+router.use('/notes', note)
 
 export default router

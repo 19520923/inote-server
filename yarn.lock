@@ -5180,7 +5180,7 @@ mongodb@3.7.3, mongodb@^3.6.9:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongoose-keywords@^0.4.0:
+mongoose-keywords@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/mongoose-keywords/-/mongoose-keywords-0.4.1.tgz#cf02abd0297b6407779d8ecba42ed4b9ace1d7c7"
   integrity sha512-Ig0NnCMIUs+f4t+xUTe/iYbJR8n3LOsBiCCH6D+fNB95zqfZSY9tPJENxEWFBFeuipfQLAoTlk6o00nwW7fsdQ==
