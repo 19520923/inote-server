@@ -4,9 +4,7 @@ import randtoken from "rand-token";
 import mongoose, { Schema } from "mongoose";
 import mongooseKeywords from "mongoose-keywords";
 import { env } from "../../config";
-
-const roles = ["user", "admin"];
-const gender = ["male", "female", "others"];
+import { USER_GENDER, USER_ROLES } from "../../constants";
 
 const userSchema = new Schema(
   {
@@ -21,13 +19,6 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
       lowercase: true,
-    },
-    username: {
-      type: String,
-      trim: true,
-      unique: true,
-      lowercase: true,
-      index: true,
     },
     phone: {
       type: String,
@@ -56,7 +47,7 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
-      enum: gender,
+      enum: USER_GENDER,
     },
     isFirstLogin: {
       type: Boolean,
@@ -77,8 +68,11 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: roles,
+      enum: USER_ROLES,
       default: "user",
+    },
+    socket_id: {
+      type: String,
     },
   },
   {
@@ -117,7 +111,7 @@ userSchema.pre("save", function (next) {
 userSchema.methods = {
   view(full) {
     const view = {};
-    let fields = ["id", "fullname", "avatar", "username"];
+    let fields = ["id", "fullname", "avatar"];
 
     if (full) {
       fields = [
@@ -151,8 +145,7 @@ userSchema.methods = {
 };
 
 userSchema.statics = {
-  roles,
-
+  USER_ROLES,
   createFromService({ service, id, email, name, avatar }) {
     return this.findOne({
       $or: [{ [`services.${service}`]: id }, { email }],
@@ -177,7 +170,7 @@ userSchema.statics = {
 };
 
 userSchema.plugin(mongooseKeywords, {
-  paths: ["email", "fullname", "username", "phone"],
+  paths: ["email", "fullname", "phone"],
 });
 
 const model = mongoose.model("User", userSchema);

@@ -3,6 +3,7 @@ import { env, mongo, port, ip, apiRoot } from "./config";
 import mongoose from "./services/mongoose";
 import express from "./services/express";
 import api from "./api";
+import Socket from "./services/socket";
 
 const app = express(apiRoot, api);
 const server = http.createServer(app);
@@ -11,6 +12,8 @@ if (mongo.uri) {
   mongoose.connect(mongo.uri);
 }
 mongoose.Promise = Promise;
+
+Socket.connect(server);
 
 setImmediate(() => {
   server.listen(port, ip, () => {

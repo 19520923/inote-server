@@ -24,7 +24,6 @@ const {
   password,
   fullname,
   avatar,
-  role,
   phone,
   about,
   dateOfBirth,
@@ -45,7 +44,7 @@ const {
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 401 Admin access only.
  */
-router.get("/", token({ required: true, roles: ["admin"] }), query(), index);
+router.get("/", token({ required: true }), query(), index);
 
 /**
  * @api {get} /users/me Retrieve current user

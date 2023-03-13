@@ -33,6 +33,7 @@ export const create = ({ bodymen: { body } }, res, next) =>
     })
     .catch((err) => {
       /* istanbul ignore else */
+      console.log(err);
       if (err.name === "MongoError" && err.code === 11000) {
         res.status(409).json({
           valid: false,

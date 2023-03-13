@@ -6,6 +6,8 @@ import job from './job'
 import interest from './interest'
 import category from './category'
 import note from './note'
+import notification from './notification'
+import project from './project'
 
 const router = new Router()
 
@@ -39,5 +41,7 @@ router.use('/jobs', job)
 router.use('/interests', interest)
 router.use('/categories', category)
 router.use('/notes', note)
+router.use('/notifications', notification)
+router.use('/projects', project)
 
 export default router
