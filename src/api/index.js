@@ -8,6 +8,10 @@ import category from './category'
 import note from './note'
 import notification from './notification'
 import project from './project'
+import mileston from './mileston'
+import task from './task'
+import reminder from './reminder'
+import comment from './comment'
 
 const router = new Router()
 
@@ -43,5 +47,9 @@ router.use('/categories', category)
 router.use('/notes', note)
 router.use('/notifications', notification)
 router.use('/projects', project)
+router.use('/milestons', mileston)
+router.use('/tasks', task)
+router.use('/reminders', reminder)
+router.use('/comments', comment)
 
 export default router

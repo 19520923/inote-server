@@ -1,33 +1,28 @@
 import mongoose, { Schema } from "mongoose";
-import mongooseKeywords from "mongoose-keywords";
+import { REMINDER_REPEAT } from "../../constants";
 
-const noteSchema = new Schema(
+const reminderSchema = new Schema(
   {
     author: {
       type: Schema.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     title: {
-      type: String,
-      required: true,
-    },
-    icon: {
       type: String,
     },
     content: {
       type: String,
     },
-    category: {
-      type: Schema.ObjectId,
-      ref: "Category",
-    },
-    opened_at: {
+    time: {
       type: Date,
-      default: new Date(),
+      min: new Date(),
     },
-    starred: {
+    is_done: {
+      type: Boolean,
+      default: false,
+    },
+    is_remind: {
       type: Boolean,
       default: false,
     },
@@ -35,32 +30,35 @@ const noteSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    repeat: {
+      type: String,
+      enum: REMINDER_REPEAT,
+      default: "none",
+    },
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
   }
 );
 
-noteSchema.methods = {
+reminderSchema.methods = {
   view() {
     return {
       // simple view
       id: this.id,
       title: this.title,
-      icon: this.icon,
       content: this.content,
-      category: this.category,
-      opened_at: this.opened_at,
-      starred: this.starred,
+      time: this.time,
+      is_done: this.is_done,
+      is_remind: this.is_remind,
+      deleteFlag: this.deleteFlag,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };
   },
 };
 
-noteSchema.plugin(mongooseKeywords, { paths: ["title"] });
-
-const model = mongoose.model("Note", noteSchema);
+const model = mongoose.model("Reminder", reminderSchema);
 
 export const schema = model.schema;
 export default model;

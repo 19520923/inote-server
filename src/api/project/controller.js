@@ -7,10 +7,20 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
     .then((project) => {
       project.members.forEach(async (member) => {
         await Notification.create({
-          content: `You have been invited to project ${project.name} (${project.acronym})`,
+          content: `You have been invited to project ${project.name} (${project.acronym}) as a member`,
           author: user,
           type: "project",
-          receiver: member,
+          receiver: member.id,
+          data: project.id,
+        });
+      });
+      project.hosts.forEach(async (host) => {
+        await Notification.create({
+          content: `You have been invited to project ${project.name} (${project.acronym}) as a host`,
+          author: user,
+          type: "project",
+          receiver: host.id,
+          data: project.id,
         });
       });
       return project;
@@ -26,13 +36,15 @@ export const index = (
 ) =>
   Project.count({
     ...query,
-    $or: [{ author: user }, { host: user }, { members: user }],
+    $or: [{ author: user }, { hosts: user }, { members: user }],
+    deleteFlag: false,
   })
     .then((count) =>
       Project.find(
         {
           ...query,
-          $or: [{ author: user }, { host: user }, { members: user }],
+          $or: [{ author: user }, { hosts: user }, { members: user }],
+          deleteFlag: false,
         },
         select,
         cursor
@@ -47,26 +59,45 @@ export const index = (
 export const show = ({ params }, res, next) =>
   Project.findById(params.id)
     .then(notFound(res))
-    .then((project) => (project ? project.view() : null))
+    .then((project) => (project ? project.view(true) : null))
     .then(success(res))
     .catch(next);
 
 export const update = ({ user, bodymen: { body }, params }, res, next) =>
   Project.findById(params.id)
     .then(notFound(res))
-    .then(authorOrAdmin(res, user, "author"))
-    .then(authorOrAdmin(res, user, "host"))
+    .then((project) => {
+      const hostIndex = project.hosts.findIndex((host) => host.id === user.id);
+      if (hostIndex === -1 && project.author !== user.id) {
+        res.status(403).end();
+        return null;
+      }
+      return project;
+    })
     .then((project) => (project ? Object.assign(project, body).save() : null))
     .then((project) => {
-      project.members.forEach(async (member) => {
-        await Notification.create({
-          content: `${project.name} (${project.acronym}) has been updated`,
-          author: user,
-          type: "project",
-          receiver: member,
+      if (project) {
+        project.members.forEach(async (member) => {
+          await Notification.create({
+            content: `${project.name} (${project.acronym}) has been updated`,
+            author: user,
+            type: "project",
+            receiver: member,
+            data: project.id,
+          });
+          project.hosts.forEach(async (host) => {
+            await Notification.create({
+              content: `You have been invited to project ${project.name} (${project.acronym}) as a host`,
+              author: user,
+              type: "project",
+              receiver: host.id,
+              data: project.id,
+            });
+          });
         });
-      });
-      return project;
+        return project;
+      }
+      return null;
     })
     .then((project) => (project ? project.view(true) : null))
     .then(success(res))
@@ -75,8 +106,6 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
 export const destroy = ({ params }, res, next) =>
   Project.findById(params.id)
     .then(notFound(res))
-    .then(authorOrAdmin(res, user, "author"))
-    .then(authorOrAdmin(res, user, "host"))
     .then((project) => (project ? project.remove() : null))
     .then(success(res, 204))
     .catch(next);

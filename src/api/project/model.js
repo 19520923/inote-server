@@ -16,10 +16,6 @@ const projectSchema = new Schema(
       trim: true,
       unique: true,
     },
-    host: {
-      type: Schema.ObjectId,
-      ref: "User",
-    },
     author: {
       type: Schema.ObjectId,
       ref: "User",
@@ -46,6 +42,12 @@ const projectSchema = new Schema(
     description: {
       type: String,
     },
+    hosts: [
+      {
+        type: Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -57,10 +59,25 @@ projectSchema.pre(/^find/, function (next) {
     return next();
   }
   this.populate({
-    path: "author host members",
+    path: "author hosts members",
     options: { _recursed: true },
   });
   next();
+});
+
+projectSchema.post(/^save/, async function (child) {
+  try {
+    if (!child.populated("author hosts members")) {
+      await child
+        .populate({
+          path: "author hosts members",
+          options: { _recursed: true },
+        })
+        .execPopulate();
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 projectSchema.methods = {
@@ -81,7 +98,7 @@ projectSchema.methods = {
           ...view,
           acronym: this.acronym,
           sprintlength: this.sprintlength,
-          host: this.host.view(),
+          hosts: this.hosts.map(host => host.view()),
           description: this.description,
           author: this.author.view(),
         }

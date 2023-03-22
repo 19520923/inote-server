@@ -12,9 +12,13 @@ export const index = (
   res,
   next
 ) =>
-  Note.count({ ...query, author: user })
+  Note.count({ ...query, author: user, deleteFlag: false })
     .then((count) =>
-      Note.find({ ...query, author: user }, select, cursor).then((notes) => ({
+      Note.find(
+        { ...query, author: user, deleteFlag: false },
+        select,
+        cursor
+      ).then((notes) => ({
         count,
         rows: notes.map((note) => note.view()),
       }))
