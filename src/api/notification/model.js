@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { NOTIFICATION_TYPES } from "../../constants";
+import socket from "../../services/socket";
 
 const notificationSchema = new Schema(
   {
@@ -49,6 +50,12 @@ notificationSchema.pre(/^find/, function (next) {
     options: { _recursed: true },
   });
   next();
+});
+
+notificationSchema.post(/^save/, async function (child) {
+  try {
+    socket.to("notification:create", child.receiver, child.view());
+  } catch (err) {}
 });
 
 notificationSchema.methods = {

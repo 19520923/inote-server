@@ -23,7 +23,7 @@ const {
   end_date,
   opened_at,
   deleteFlag,
-  reminderFlag,
+  is_remind,
   registered_by,
 } = schema.tree;
 
@@ -32,6 +32,10 @@ const schema_q = new Schema({
     type: String,
     required: true,
   },
+  priority: String,
+  assignee: String,
+  registered_by: String,
+  is_remind: Boolean,
 });
 /**
  * @api {post} /tasks Create task
@@ -78,7 +82,7 @@ router.post(
     start_date,
     due_date,
     end_date,
-    reminderFlag,
+    is_remind,
     registered_by,
   }),
   create
@@ -158,7 +162,7 @@ router.put(
     end_date,
     opened_at,
     deleteFlag,
-    reminderFlag,
+    is_remind,
     registered_by,
   }),
   update

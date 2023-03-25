@@ -12,6 +12,7 @@ import mileston from './mileston'
 import task from './task'
 import reminder from './reminder'
 import comment from './comment'
+import message from './message'
 
 const router = new Router()
 
@@ -51,5 +52,6 @@ router.use('/milestons', mileston)
 router.use('/tasks', task)
 router.use('/reminders', reminder)
 router.use('/comments', comment)
+router.use('/messages', message)
 
 export default router

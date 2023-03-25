@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { TASK_PRIORITY, TASK_STATUS } from "../../constants";
 import mongooseKeywords from "mongoose-keywords";
 import { Notification } from "../notification";
+import socket from "../../services/socket";
 
 const taskSchema = new Schema(
   {
@@ -127,12 +128,13 @@ taskSchema.pre(/^find/, function (next) {
 taskSchema.post(/^save/, async function (child) {
   try {
     if (!child.populated("author registered_by assignee mileston")) {
-      await child
+      const task = await child
         .populate({
           path: "author registered_by assignee mileston",
           options: { _recursed: true },
         })
         .execPopulate();
+      socket.to("task:update", child.project, task.view(true));
     }
   } catch (err) {
     console.log(err);

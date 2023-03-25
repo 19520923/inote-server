@@ -4,10 +4,10 @@ import { middleware as body } from "bodymen";
 import { token } from "../../services/passport";
 import { create, index, update, destroy } from "./controller";
 import { schema } from "./model";
-export Mileston, { schema } from "./model";
+export Message, { schema } from "./model";
 
 const router = new Router();
-const { title, project, deleteFlag } = schema.tree;
+const { project, reply_to, content, deleteFlag, type } = schema.tree;
 
 const schema_q = new Schema({
   project: {
@@ -17,69 +17,73 @@ const schema_q = new Schema({
 });
 
 /**
- * @api {post} /milestons Create mileston
- * @apiName CreateMileston
- * @apiGroup Mileston
+ * @api {post} /messages Create message
+ * @apiName CreateMessage
+ * @apiGroup Message
  * @apiPermission user
  * @apiParam {String} access_token user access token.
- * @apiParam title Mileston's title.
- * @apiParam project Mileston's project.
- * @apiParam deleteFlag Mileston's deleteFlag.
- * @apiSuccess {Object} mileston Mileston's data.
+ * @apiParam project Message's project.
+ * @apiParam reply_to Message's reply_to.
+ * @apiParam content Message's content.
+ * @apiParam deleteFlag Message's deleteFlag.
+ * @apiParam type Message's type.
+ * @apiSuccess {Object} message Message's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Mileston not found.
+ * @apiError 404 Message not found.
  * @apiError 401 user access only.
  */
 router.post(
   "/",
   token({ required: true }),
-  body({ title, project, deleteFlag }),
+  body({ project, reply_to, content, type }),
   create
 );
 
 /**
- * @api {get} /milestons Retrieve milestons
- * @apiName RetrieveMilestons
- * @apiGroup Mileston
+ * @api {get} /messages Retrieve messages
+ * @apiName RetrieveMessages
+ * @apiGroup Message
  * @apiPermission user
  * @apiParam {String} access_token user access token.
  * @apiUse listParams
- * @apiSuccess {Number} count Total amount of milestons.
- * @apiSuccess {Object[]} rows List of milestons.
+ * @apiSuccess {Number} count Total amount of messages.
+ * @apiSuccess {Object[]} rows List of messages.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 401 user access only.
  */
 router.get("/", token({ required: true }), query(schema_q), index);
 
 /**
- * @api {put} /milestons/:id Update mileston
- * @apiName UpdateMileston
- * @apiGroup Mileston
+ * @api {put} /messages/:id Update message
+ * @apiName UpdateMessage
+ * @apiGroup Message
  * @apiPermission user
  * @apiParam {String} access_token user access token.
- * @apiParam title Mileston's title.
- * @apiParam project Mileston's project.
- * @apiParam deleteFlag Mileston's deleteFlag.
- * @apiSuccess {Object} mileston Mileston's data.
+ * @apiParam project Message's project.
+ * @apiParam reply_to Message's reply_to.
+ * @apiParam content Message's content.
+ * @apiParam deleteFlag Message's deleteFlag.
+ * @apiParam type Message's type.
+ * @apiSuccess {Object} message Message's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Mileston not found.
+ * @apiError 404 Message not found.
  * @apiError 401 user access only.
  */
 router.put(
   "/:id",
   token({ required: true }),
-  body({ title, deleteFlag }),
+  body({ reply_to, content, deleteFlag, type }),
   update
 );
 
 /**
- * @api {delete} /milestons/:id Delete mileston
- * @apiName DeleteMileston
- * @apiGroup Mileston
+ * @api {delete} /messages/:id Delete message
+ * @apiName DeleteMessage
+ * @apiGroup Message
  * @apiPermission user
  * @apiParam {String} access_token user access token.
  * @apiSuccess (Success 204) 204 No Content.
- * @apiError 404 Mileston not found.
+ * @apiError 404 Message not found.
  * @apiError 401 user access only.
  */
 router.delete("/:id", token({ required: true }), destroy);

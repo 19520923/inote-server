@@ -1,13 +1,9 @@
 import { success, notFound } from "../../services/response/";
 import { Notification } from ".";
-import Socket from "../../services/socket";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Notification.create({ ...body, author: user })
     .then((notification) => notification.view())
-    .then((notification) =>
-      Socket.to("notification:create", notification.receiver)
-    )
     .then(success(res, 201))
     .catch(next);
 

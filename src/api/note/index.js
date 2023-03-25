@@ -9,7 +9,8 @@ export Note, { schema } from "./model";
 const router = new Router();
 const { title, icon, content, category, opened_at, starred, deleteFlag } =
   schema.tree;
-const customQuery = new Schema({
+
+const schema_q = new Schema({
   category: String
 })
 /**
@@ -49,7 +50,7 @@ router.post(
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 401 user access only.
  */
-router.get("/", token({ required: true }), query(customQuery), index);
+router.get("/", token({ required: true }), query(schema_q), index);
 
 /**
  * @api {get} /notes/:id Retrieve note

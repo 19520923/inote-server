@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose";
+import socket from "../../services/socket";
+import { Task } from "../task";
 
 const commentSchema = new Schema(
   {
@@ -37,13 +39,15 @@ commentSchema.pre(/^find/, function (next) {
 
 commentSchema.post(/^save/, async function (child) {
   try {
+    const task = await Task.findById(child.task);
     if (!child.populated("author")) {
-      await child
+      const comment = await child
         .populate({
           path: "author",
           options: { _recursed: true },
         })
         .execPopulate();
+      socket.to("comment:update", task.project, comment.view());
     }
   } catch (err) {
     console.log(err);

@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import passport from "passport";
-import { User } from "../../api/user";
+import { Project } from "../../api/project";
 class socket extends Function {
   constructor() {
     super();
@@ -13,33 +13,35 @@ class socket extends Function {
     this.io.use(this.wrapMiddlewareForSocketIo(passport.session()));
     this.io.use(this.wrapMiddlewareForSocketIo(passport.authenticate(["jwt"])));
 
-    this.io.on("connection", (socket) => {
+    this.io.on("connection", async (socket) => {
       const user = socket.request.user;
+      socket.join(user.id);
+
+      const projects = await Project.find({
+        $or: [{ author: user.id }, { hosts: user.id }, { members: user.id }],
+        deleteFlag: false,
+      });
+
+      projects.forEach((project) => {
+        socket.join(project.id);
+      });
 
       socket.emit("user:connect", { user_id: user.id });
-      this.storeSocketIdInDB(socket.id, user.id);
 
-      socket.on("disconnect", () => {
+      socket.on("disconnect", async () => {
         socket.emit("user:disconnect", {
           user_id: user.id,
         });
-        this.storeSocketIdInDB("", user.id);
+        socket.leave(user.id);
+        projects.forEach((project) => {
+          socket.leave(project.id);
+        });
       });
     });
   }
 
   wrapMiddlewareForSocketIo(middleware) {
     return (socket, next) => middleware(socket.request, {}, next);
-  }
-
-  async storeSocketIdInDB(socket_id, user_id) {
-    await User.updateOne(
-      { _id: user_id },
-      { $set: { socket_id: socket_id } },
-      function (err) {
-        console.log(err);
-      }
-    );
   }
 
   toAll(message) {
@@ -49,14 +51,11 @@ class socket extends Function {
     };
   }
 
-  async to(message, user_id) {
-    const user = await User.findById(user_id);
-    return (data) => {
-      if (user.socket_id) {
-        this.io.to(user.socket_id).emit(message, data);
-      }
-      return data;
-    };
+  async to(message, socket_id, data) {
+    if (socket_id && data) {
+      this.io.to(socket_id).emit(message, data);
+    }
+    return data;
   }
 }
 
