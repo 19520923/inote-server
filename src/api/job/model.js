@@ -6,7 +6,7 @@ const jobSchema = new Schema(
       type: String,
       required: true,
     },
-    deleteFlag: {
+    deleted_flag: {
       type: Boolean,
       default: false,
     },
@@ -21,7 +21,7 @@ jobSchema.methods = {
     return {
       id: this.id,
       name: this.name,
-      deleteFlag: this.deleteFlag,
+      deleted_flag: this.deleted_flag,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };

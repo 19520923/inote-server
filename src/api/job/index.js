@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Job, { schema } from "./model";
 
 const router = new Router();
-const { name, deleteFlag } = schema.tree;
+const { name, deleted_flag } = schema.tree;
 
 /**
  * @api {post} /jobs Create job
@@ -15,7 +15,7 @@ const { name, deleteFlag } = schema.tree;
  * @apiGroup Job
  * @apiPermission user
  * @apiParam {String} access_token user access token.
- * @apiParam name deleteFlag Job's name deleteFlag.
+ * @apiParam name deleted_flag Job's name deleted_flag.
  * @apiSuccess {Object} job Job's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Job not found.
@@ -43,7 +43,7 @@ router.get("/", token({ required: true }), query(), index);
  * @apiGroup Job
  * @apiPermission user
  * @apiParam {String} access_token user access token.
- * @apiParam name deleteFlag Job's name deleteFlag.
+ * @apiParam name deleted_flag Job's name deleted_flag.
  * @apiSuccess {Object} job Job's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Job not found.
@@ -52,7 +52,7 @@ router.get("/", token({ required: true }), query(), index);
 router.put(
   "/:id",
   token({ required: true, roles: ["admin"] }),
-  body({ name, deleteFlag }),
+  body({ name, deleted_flag }),
   update
 );
 

@@ -7,14 +7,14 @@ import { token } from "../../services/passport";
 export Interest, { schema } from "./model";
 
 const router = new Router();
-const { name, deleteFlag } = schema.tree;
+const { name, deleted_flag } = schema.tree;
 
 /**
  * @api {post} /interests Create interest
  * @apiName CreateInterest
  * @apiGroup Interest
  * @apiParam name Interest's name.
- * @apiParam deleteFlag Interest's deleteFlag.
+ * @apiParam deleted_flag Interest's deleted_flag.
  * @apiSuccess {Object} interest Interest's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Interest not found.
@@ -37,7 +37,7 @@ router.get("/", token({ required: true }), query(), index);
  * @apiName UpdateInterest
  * @apiGroup Interest
  * @apiParam name Interest's name.
- * @apiParam deleteFlag Interest's deleteFlag.
+ * @apiParam deleted_flag Interest's deleted_flag.
  * @apiSuccess {Object} interest Interest's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Interest not found.
@@ -45,7 +45,7 @@ router.get("/", token({ required: true }), query(), index);
 router.put(
   "/:id",
   token({ required: true, roles: ["admin"] }),
-  body({ name, deleteFlag }),
+  body({ name, deleted_flag }),
   update
 );
 

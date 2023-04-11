@@ -19,7 +19,7 @@ class socket extends Function {
 
       const projects = await Project.find({
         $or: [{ author: user.id }, { hosts: user.id }, { members: user.id }],
-        deleteFlag: false,
+        deleted_flag: false,
       });
 
       projects.forEach((project) => {

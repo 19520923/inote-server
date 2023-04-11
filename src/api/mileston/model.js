@@ -15,7 +15,7 @@ const milestonSchema = new Schema(
       ref: "Project",
       required: true,
     },
-    deleteFlag: {
+    deleted_flag: {
       type: Boolean,
       default: false,
     },

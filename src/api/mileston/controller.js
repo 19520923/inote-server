@@ -8,9 +8,9 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
     .catch(next);
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  Mileston.count({ ...query, deleteFlag: false })
+  Mileston.count({ ...query, deleted_flag: false })
     .then((count) =>
-      Mileston.find({ ...query, deleteFlag: false }, select, cursor).then(
+      Mileston.find({ ...query, deleted_flag: false }, select, cursor).then(
         (milestons) => ({
           count,
           rows: milestons.map((mileston) => mileston.view()),

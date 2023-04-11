@@ -12,10 +12,10 @@ export const index = (
   res,
   next
 ) =>
-  Note.count({ ...query, author: user, deleteFlag: false })
+  Note.count({ ...query, author: user, deleted_flag: false })
     .then((count) =>
       Note.find(
-        { ...query, author: user, deleteFlag: false },
+        { ...query, author: user, deleted_flag: false },
         select,
         cursor
       ).then((notes) => ({

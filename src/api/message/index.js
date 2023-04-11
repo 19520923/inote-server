@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Message, { schema } from "./model";
 
 const router = new Router();
-const { project, reply_to, content, deleteFlag, type } = schema.tree;
+const { project, reply_to, content, deleted_flag, type } = schema.tree;
 
 const schema_q = new Schema({
   project: {
@@ -25,7 +25,7 @@ const schema_q = new Schema({
  * @apiParam project Message's project.
  * @apiParam reply_to Message's reply_to.
  * @apiParam content Message's content.
- * @apiParam deleteFlag Message's deleteFlag.
+ * @apiParam deleted_flag Message's deleted_flag.
  * @apiParam type Message's type.
  * @apiSuccess {Object} message Message's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
@@ -62,7 +62,7 @@ router.get("/", token({ required: true }), query(schema_q), index);
  * @apiParam project Message's project.
  * @apiParam reply_to Message's reply_to.
  * @apiParam content Message's content.
- * @apiParam deleteFlag Message's deleteFlag.
+ * @apiParam deleted_flag Message's deleted_flag.
  * @apiParam type Message's type.
  * @apiSuccess {Object} message Message's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
@@ -72,7 +72,7 @@ router.get("/", token({ required: true }), query(schema_q), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ reply_to, content, deleteFlag, type }),
+  body({ reply_to, content, deleted_flag, type }),
   update
 );
 

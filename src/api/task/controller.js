@@ -20,9 +20,9 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
     );
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  Task.count({ ...query, deleteFlag: false })
+  Task.count({ ...query, deleted_flag: false })
     .then((count) =>
-      Task.find({ ...query, deleteFlag: false }, select, cursor).then(
+      Task.find({ ...query, deleted_flag: false }, select, cursor).then(
         (tasks) => ({
           count,
           rows: tasks.map((task) => task.view()),
@@ -63,7 +63,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
             data: task.id,
           });
         }
-        return task
+        return task;
       }
       return null;
     })

@@ -8,9 +8,9 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
     .catch(next);
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  Message.count({ ...query, deleteFlag: false })
+  Message.count({ ...query, deleted_flag: false })
     .then((count) =>
-      Message.find({ ...query, deleteFlag: false }, select, cursor).then(
+      Message.find({ ...query, deleted_flag: false }, select, cursor).then(
         (messages) => ({
           count,
           rows: messages.map((message) => message.view()),

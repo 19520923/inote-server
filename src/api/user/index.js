@@ -30,7 +30,7 @@ const {
   job,
   interest,
   isFirstLogin,
-  deleteFlag,
+  deleted_flag,
 } = schema.tree;
 
 /**
@@ -106,7 +106,7 @@ router.put(
     about,
     job,
     interest,
-    deleteFlag,
+    deleted_flag,
     dateOfBirth,
     isFirstLogin,
   }),

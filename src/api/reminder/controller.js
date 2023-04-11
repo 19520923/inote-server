@@ -8,10 +8,10 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
     .catch(next);
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  Reminder.count({ ...query, author: user, deleteFlag: false })
+  Reminder.count({ ...query, author: user, deleted_flag: false })
     .then((count) =>
       Reminder.find(
-        { ...query, author: user, deleteFlag: false },
+        { ...query, author: user, deleted_flag: false },
         select,
         cursor
       ).then((reminders) => ({

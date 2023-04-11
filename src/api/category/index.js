@@ -15,7 +15,7 @@ const { name, isHide, order } = schema.tree;
  * @apiGroup Category
  * @apiParam name Category's name.
  * @apiParam isHide Category's isHide.
- * @apiParam deleteFlag Category's deleteFlag.
+ * @apiParam deleted_flag Category's deleted_flag.
  * @apiParam order Category's order.
  * @apiSuccess {Object} category Category's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
@@ -40,7 +40,7 @@ router.get("/", token({ required: true }), query(), index);
  * @apiGroup Category
  * @apiParam name Category's name.
  * @apiParam isHide Category's isHide.
- * @apiParam deleteFlag Category's deleteFlag.
+ * @apiParam deleted_flag Category's deleted_flag.
  * @apiParam order Category's order.
  * @apiSuccess {Object} category Category's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.

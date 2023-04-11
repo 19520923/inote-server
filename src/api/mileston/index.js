@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Mileston, { schema } from "./model";
 
 const router = new Router();
-const { title, project, deleteFlag } = schema.tree;
+const { title, project, deleted_flag } = schema.tree;
 
 const schema_q = new Schema({
   project: {
@@ -24,7 +24,7 @@ const schema_q = new Schema({
  * @apiParam {String} access_token user access token.
  * @apiParam title Mileston's title.
  * @apiParam project Mileston's project.
- * @apiParam deleteFlag Mileston's deleteFlag.
+ * @apiParam deleted_flag Mileston's deleted_flag.
  * @apiSuccess {Object} mileston Mileston's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Mileston not found.
@@ -33,7 +33,7 @@ const schema_q = new Schema({
 router.post(
   "/",
   token({ required: true }),
-  body({ title, project, deleteFlag }),
+  body({ title, project, deleted_flag }),
   create
 );
 
@@ -59,7 +59,7 @@ router.get("/", token({ required: true }), query(schema_q), index);
  * @apiParam {String} access_token user access token.
  * @apiParam title Mileston's title.
  * @apiParam project Mileston's project.
- * @apiParam deleteFlag Mileston's deleteFlag.
+ * @apiParam deleted_flag Mileston's deleted_flag.
  * @apiSuccess {Object} mileston Mileston's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Mileston not found.
@@ -68,7 +68,7 @@ router.get("/", token({ required: true }), query(schema_q), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ title, deleteFlag }),
+  body({ title, deleted_flag }),
   update
 );
 

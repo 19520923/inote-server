@@ -8,9 +8,9 @@ export const create = ({ bodymen: { body } }, res, next) =>
     .catch(next);
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  Interest.count({ ...query, deleteFlag: false })
+  Interest.count({ ...query, deleted_flag: false })
     .then((count) =>
-      Interest.find({ ...query, deleteFlag: false }, select, cursor).then(
+      Interest.find({ ...query, deleted_flag: false }, select, cursor).then(
         (interests) => ({
           count,
           rows: interests.map((interest) => interest.view()),

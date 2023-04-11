@@ -37,14 +37,14 @@ export const index = (
   Project.count({
     ...query,
     $or: [{ author: user }, { hosts: user }, { members: user }],
-    deleteFlag: false,
+    deleted_flag: false,
   })
     .then((count) =>
       Project.find(
         {
           ...query,
           $or: [{ author: user }, { hosts: user }, { members: user }],
-          deleteFlag: false,
+          deleted_flag: false,
         },
         select,
         cursor

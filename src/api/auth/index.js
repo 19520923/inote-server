@@ -32,5 +32,5 @@ router.post('/',
 router.post('/google',
   google(),
   login)
-
+  
 export default router

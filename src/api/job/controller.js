@@ -8,9 +8,9 @@ export const create = ({ bodymen: { body } }, res, next) =>
     .catch(next);
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  Job.count({ ...query, deleteFlag: false })
+  Job.count({ ...query, deleted_flag: false })
     .then((count) =>
-      Job.find({ ...query, deleteFlag: false }, select, cursor).then(
+      Job.find({ ...query, deleted_flag: false }, select, cursor).then(
         (jobs) => ({
           count,
           rows: jobs.map((job) => job.view()),

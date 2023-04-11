@@ -27,9 +27,14 @@ const config = {
     ip: process.env.IP || "0.0.0.0",
     apiRoot: process.env.API_ROOT || "",
     defaultEmail: "no-reply@i-note.com",
-    sendgridKey: requireProcessEnv("SENDGRID_KEY"),
     masterKey: requireProcessEnv("MASTER_KEY"),
     jwtSecret: requireProcessEnv("JWT_SECRET"),
+    clientId: requireProcessEnv("OAUTH_CLIENTID"),
+    clientSecret: requireProcessEnv("OAUTH_CLIENT_SECRET"),
+    email: requireProcessEnv("MAIL_USERNAME"),
+    password: requireProcessEnv("MAIL_PASSWORD"),
+    refreshToken: requireProcessEnv("OAUTH_REFRESH_TOKEN"),
+
     mongo: {
       options: {
         useUnifiedTopology: true,

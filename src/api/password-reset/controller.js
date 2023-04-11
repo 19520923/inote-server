@@ -1,5 +1,4 @@
 import { success, notFound } from '../../services/response/'
-import { sendMail } from '../../services/sendgrid'
 import { PasswordReset } from '.'
 import { User } from '../user'
 
@@ -19,7 +18,7 @@ export const create = ({ bodymen: { body: { email, link } } }, res, next) =>
         If you didn't make this request then you can safely ignore this email. :)<br><br>
         &mdash; INote Team
       `
-      return sendMail({ toEmail: email, subject: 'INote - Password Reset', content })
+      // return sendMail({ toEmail: email, subject: 'INote - Password Reset', content })
     })
     .then(([response]) => response ? res.status(response.statusCode).end() : null)
     .catch(next)

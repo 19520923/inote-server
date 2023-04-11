@@ -22,7 +22,7 @@ const {
   due_date,
   end_date,
   opened_at,
-  deleteFlag,
+  deleted_flag,
   is_remind,
   registered_by,
 } = schema.tree;
@@ -58,7 +58,7 @@ const schema_q = new Schema({
  * @apiParam dueDate Task's dueDate.
  * @apiParam endDate Task's endDate.
  * @apiParam opened_at Task's opened_at.
- * @apiParam deleteFlag Task's deleteFlag.
+ * @apiParam deleted_flag Task's deleted_flag.
  * @apiParam reminderFlag Task's reminderFlag.
  * @apiSuccess {Object} task Task's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
@@ -136,7 +136,7 @@ router.get("/:id", token({ required: true }), show);
  * @apiParam dueDate Task's dueDate.
  * @apiParam endDate Task's endDate.
  * @apiParam opened_at Task's opened_at.
- * @apiParam deleteFlag Task's deleteFlag.
+ * @apiParam deleted_flag Task's deleted_flag.
  * @apiParam reminderFlag Task's reminderFlag.
  * @apiSuccess {Object} task Task's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
@@ -161,7 +161,7 @@ router.put(
     due_date,
     end_date,
     opened_at,
-    deleteFlag,
+    deleted_flag,
     is_remind,
     registered_by,
   }),

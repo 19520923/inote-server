@@ -21,7 +21,7 @@ const { content, type, isSystem, receiver, isSeen } = schema.tree;
  * @apiParam isSystem Notification's isSystem.
  * @apiParam author Notification's author.
  * @apiParam receiver Notification's receiver.
- * @apiParam deleteFlag Notification's deleteFlag.
+ * @apiParam deleted_flag Notification's deleted_flag.
  * @apiSuccess {Object} notification Notification's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Notification not found.

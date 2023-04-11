@@ -31,7 +31,7 @@ const noteSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    deleteFlag: {
+    deleted_flag: {
       type: Boolean,
       default: false,
     },

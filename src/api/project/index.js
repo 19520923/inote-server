@@ -16,7 +16,7 @@ const {
   sprintlength,
   status,
   members,
-  deleteFlag,
+  deleted_flag,
 } = schema.tree;
 
 /**
@@ -33,7 +33,7 @@ const {
  * @apiParam sprintlength Project's sprintlength.
  * @apiParam status Project's status.
  * @apiParam members Project's members.
- * @apiParam deleteFlag Project's deleteFlag.
+ * @apiParam deleted_flag Project's deleted_flag.
  * @apiSuccess {Object} project Project's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Project not found.
@@ -93,7 +93,7 @@ router.get("/:id", token({ required: true }), show);
  * @apiParam sprintlength Project's sprintlength.
  * @apiParam status Project's status.
  * @apiParam members Project's members.
- * @apiParam deleteFlag Project's deleteFlag.
+ * @apiParam deleted_flag Project's deleted_flag.
  * @apiSuccess {Object} project Project's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Project not found.
@@ -111,7 +111,7 @@ router.put(
     sprintlength,
     status,
     members,
-    deleteFlag,
+    deleted_flag,
   }),
   update
 );

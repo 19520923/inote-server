@@ -8,9 +8,9 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
     .catch(next);
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  Comment.count({ ...query, deleteFlag: false })
+  Comment.count({ ...query, deleted_flag: false })
     .then((count) =>
-      Comment.find({ ...query, deleteFlag: false }, select, cursor).then(
+      Comment.find({ ...query, deleted_flag: false }, select, cursor).then(
         (comments) => ({
           count,
           rows: comments.map((comment) => comment.view()),

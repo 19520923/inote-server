@@ -35,7 +35,7 @@ const projectSchema = new Schema(
         ref: "User",
       },
     ],
-    deleteFlag: {
+    deleted_flag: {
       type: Boolean,
       default: false,
     },
@@ -89,6 +89,7 @@ projectSchema.methods = {
       icon: this.icon,
       status: this.status,
       members: this.members.map((member) => member.view()),
+      hosts: this.hosts.map((host) => host.view()),
       created_at: this.created_at,
       updated_at: this.updated_at,
     };
@@ -98,7 +99,6 @@ projectSchema.methods = {
           ...view,
           acronym: this.acronym,
           sprintlength: this.sprintlength,
-          hosts: this.hosts.map(host => host.view()),
           description: this.description,
           author: this.author.view(),
         }

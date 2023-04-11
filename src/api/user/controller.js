@@ -1,11 +1,12 @@
 import { success, notFound } from "../../services/response/";
 import { User } from ".";
-import { sign } from "../../services/jwt";
+import { VerifyCode } from "../verify-code";
+import { sendMail } from "../../services/nodemailer";
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  User.count({ ...query, deleteFlag: false })
+  User.count({ ...query, deleted_flag: false })
     .then((count) =>
-      User.find({ ...query, deleteFlag: false }, select, cursor).then(
+      User.find({ ...query, deleted_flag: false }, select, cursor).then(
         (users) => ({
           rows: users.map((user) => user.view()),
           count,
@@ -26,11 +27,21 @@ export const showMe = ({ user }, res) => res.json(user.view(true));
 
 export const create = ({ bodymen: { body } }, res, next) =>
   User.create(body)
-    .then((user) => {
-      sign(user.id)
-        .then((token) => ({ token, user: user.view(true) }))
-        .then(success(res, 201));
+    .then(async (user) => {
+      const code = Math.floor(100000 + Math.random() * 900000);
+      await VerifyCode.create({
+        user_id: user.id,
+        email: user.email,
+        code: code,
+      });
+      sendMail({
+        subject: "Verify email",
+        to: user.email,
+        html: `<p>Hello,</p> <p>Before verifying your email, please confirm that the email of your INote accout is ${user.email}.</p><p><b>If the above email is correct</b>, verify by entering verification code below to application:</p><h1>${code}</h1>Incorrect email? <b>Do not verify</b>, and ignore this email.</p><p>Verification code is available in 15 minutes</p>`,
+      });
+      return user;
     })
+    .then((user) => (user ? res.status(201).end() : null))
     .catch((err) => {
       /* istanbul ignore else */
       console.log(err);

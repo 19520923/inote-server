@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Comment, { schema } from "./model";
 
 const router = new Router();
-const { content, task, deleteFlag } = schema.tree;
+const { content, task, deleted_flag } = schema.tree;
 
 /**
  * @api {post} /comments Create comment
@@ -18,7 +18,7 @@ const { content, task, deleteFlag } = schema.tree;
  * @apiParam content Comment's content.
  * @apiParam task Comment's task.
  * @apiParam parent Comment's parent.
- * @apiParam deleteFlag Comment's deleteFlag.
+ * @apiParam deleted_flag Comment's deleted_flag.
  * @apiSuccess {Object} comment Comment's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Comment not found.
@@ -49,7 +49,7 @@ router.get("/", token({ required: true }), query(), index);
  * @apiParam content Comment's content.
  * @apiParam task Comment's task.
  * @apiParam parent Comment's parent.
- * @apiParam deleteFlag Comment's deleteFlag.
+ * @apiParam deleted_flag Comment's deleted_flag.
  * @apiSuccess {Object} comment Comment's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Comment not found.
@@ -58,7 +58,7 @@ router.get("/", token({ required: true }), query(), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ content, task, deleteFlag }),
+  body({ content, task, deleted_flag }),
   update
 );
 

@@ -16,7 +16,7 @@ const commentSchema = new Schema(
       type: Schema.ObjectId,
       ref: "Task",
     },
-    deleteFlag: {
+    deleted_flag: {
       type: Boolean,
       default: false,
     },
@@ -62,7 +62,7 @@ commentSchema.methods = {
       author: this.author.view(),
       content: this.content,
       task: this.task,
-      deleteFlag: this.deleteFlag,
+      deleted_flag: this.deleted_flag,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };

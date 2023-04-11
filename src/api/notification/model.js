@@ -31,7 +31,7 @@ const notificationSchema = new Schema(
       ref: "User",
       index: true,
     },
-    deleteFlag: {
+    deleted_flag: {
       type: Boolean,
       default: false,
     },

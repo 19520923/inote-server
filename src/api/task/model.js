@@ -76,7 +76,7 @@ const taskSchema = new Schema(
       type: Date,
       default: new Date(),
     },
-    deleteFlag: {
+    deleted_flag: {
       type: Boolean,
       default: false,
     },

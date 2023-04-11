@@ -12,6 +12,10 @@ const userSchema = new Schema(
       type: String,
       index: true,
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
     email: {
       type: String,
       match: /^\S+@\S+\.\S+$/,
@@ -59,7 +63,7 @@ const userSchema = new Schema(
         ref: "Interest",
       },
     ],
-    deleteFlag: {
+    deleted_flag: {
       type: Boolean,
       default: false,
     },
@@ -121,7 +125,7 @@ userSchema.methods = {
         "about",
         "job",
         "isFirstLogin",
-        "deleteFlag",
+        "deleted_flag",
         "interest",
         "gender",
       ];

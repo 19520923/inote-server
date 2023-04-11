@@ -23,7 +23,7 @@ const messageSchema = new Schema(
     content: {
       type: String,
     },
-    deleteFlag: {
+    deleted_flag: {
       type: Boolean,
       default: false,
     },
@@ -74,7 +74,7 @@ messageSchema.methods = {
       project: this.project,
       reply_to: this.reply_to,
       content: this.content,
-      deleteFlag: this.deleteFlag,
+      deleted_flag: this.deleted_flag,
       type: this.type,
       created_at: this.created_at,
       updated_at: this.updated_at,

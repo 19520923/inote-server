@@ -7,12 +7,12 @@ import { schema } from "./model";
 export Note, { schema } from "./model";
 
 const router = new Router();
-const { title, icon, content, category, opened_at, starred, deleteFlag } =
+const { title, icon, content, category, opened_at, starred, deleted_flag } =
   schema.tree;
 
 const schema_q = new Schema({
-  category: String
-})
+  category: String,
+});
 /**
  * @api {post} /notes Create note
  * @apiName CreateNote
@@ -25,7 +25,7 @@ const schema_q = new Schema({
  * @apiParam category Note's category.
  * @apiParam opened_at Note's opened_at.
  * @apiParam starred Note's starred.
- * @apiParam deleteFlag Note's deleteFlag.
+ * @apiParam deleted_flag Note's deleted_flag.
  * @apiSuccess {Object} note Note's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Note not found.
@@ -77,7 +77,7 @@ router.get("/:id", token({ required: true }), show);
  * @apiParam category Note's category.
  * @apiParam opened_at Note's opened_at.
  * @apiParam starred Note's starred.
- * @apiParam deleteFlag Note's deleteFlag.
+ * @apiParam deleted_flag Note's deleted_flag.
  * @apiSuccess {Object} note Note's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Note not found.
@@ -86,7 +86,7 @@ router.get("/:id", token({ required: true }), show);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ title, icon, content, category, opened_at, starred, deleteFlag }),
+  body({ title, icon, content, category, opened_at, starred, deleted_flag }),
   update
 );
 

@@ -1,13 +1,13 @@
-import { Router } from 'express'
-import { middleware as query } from 'querymen'
-import { middleware as body } from 'bodymen'
-import { token } from '../../services/passport'
-import { create, index, update, destroy } from './controller'
-import { schema } from './model'
-export Reminder, { schema } from './model'
+import { Router } from "express";
+import { middleware as query } from "querymen";
+import { middleware as body } from "bodymen";
+import { token } from "../../services/passport";
+import { create, index, update, destroy } from "./controller";
+import { schema } from "./model";
+export Reminder, { schema } from "./model";
 
-const router = new Router()
-const { title, content, time, is_done, is_remind, deleteFlag } = schema.tree
+const router = new Router();
+const { title, content, time, is_done, is_remind, deleted_flag } = schema.tree;
 
 /**
  * @api {post} /reminders Create reminder
@@ -20,16 +20,18 @@ const { title, content, time, is_done, is_remind, deleteFlag } = schema.tree
  * @apiParam time Reminder's time.
  * @apiParam is_done Reminder's is_done.
  * @apiParam is_remind Reminder's is_remind.
- * @apiParam deleteFlag Reminder's deleteFlag.
+ * @apiParam deleted_flag Reminder's deleted_flag.
  * @apiSuccess {Object} reminder Reminder's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Reminder not found.
  * @apiError 401 user access only.
  */
-router.post('/',
+router.post(
+  "/",
   token({ required: true }),
-  body({ title, content, time, is_done, is_remind, deleteFlag }),
-  create)
+  body({ title, content, time, is_done, is_remind, deleted_flag }),
+  create
+);
 
 /**
  * @api {get} /reminders Retrieve reminders
@@ -43,10 +45,7 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 401 user access only.
  */
-router.get('/',
-  token({ required: true }),
-  query(),
-  index)
+router.get("/", token({ required: true }), query(), index);
 
 /**
  * @api {put} /reminders/:id Update reminder
@@ -59,16 +58,18 @@ router.get('/',
  * @apiParam time Reminder's time.
  * @apiParam is_done Reminder's is_done.
  * @apiParam is_remind Reminder's is_remind.
- * @apiParam deleteFlag Reminder's deleteFlag.
+ * @apiParam deleted_flag Reminder's deleted_flag.
  * @apiSuccess {Object} reminder Reminder's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Reminder not found.
  * @apiError 401 user access only.
  */
-router.put('/:id',
+router.put(
+  "/:id",
   token({ required: true }),
-  body({ title, content, time, is_done, is_remind, deleteFlag }),
-  update)
+  body({ title, content, time, is_done, is_remind, deleted_flag }),
+  update
+);
 
 /**
  * @api {delete} /reminders/:id Delete reminder
@@ -80,8 +81,6 @@ router.put('/:id',
  * @apiError 404 Reminder not found.
  * @apiError 401 user access only.
  */
-router.delete('/:id',
-  token({ required: true }),
-  destroy)
+router.delete("/:id", token({ required: true }), destroy);
 
-export default router
+export default router;
