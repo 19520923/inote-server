@@ -33,6 +33,7 @@ const {
   interest,
   is_first_login,
   deleted_flag,
+  username,
 } = schema.tree;
 
 /**
@@ -112,6 +113,7 @@ router.put(
     deleted_flag,
     date_of_birth,
     is_first_login,
+    username,
   }),
   update
 );

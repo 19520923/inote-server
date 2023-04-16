@@ -112,7 +112,7 @@ userSchema.pre("save", function (next) {
 userSchema.methods = {
   view(full) {
     const view = {};
-    let fields = ["id", "fullname", "avatar"];
+    let fields = ["id", "fullname", "avatar", "username"];
 
     if (full) {
       fields = [
