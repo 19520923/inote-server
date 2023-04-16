@@ -110,3 +110,23 @@ export const destroy = ({ params }, res, next) =>
     .then((user) => (user ? user.remove() : null))
     .then(success(res, 204))
     .catch(next);
+
+export const forgotPassword = ({ bodymen: { body } }, res, next) =>
+  User.findOne({ email: body.email })
+    .then(notFound(res))
+    .then((user) => {
+      if (!user) {
+        return null;
+      }
+      const newPassword = Math.random().toString(36).substring(2, 10);
+      const saved = user.set({ password: newPassword }).save();
+
+      sendMail({
+        subject: "Forgot password",
+        to: user.email,
+        html: `<p>Hello ${user.email},</p> <p>Your new password is:</p><h1>${newPassword}</h1><p><b>Do not share with anyone</b>, thank you</p>`,
+      });
+      return user;
+    })
+    .then(success(res))
+    .catch(next);

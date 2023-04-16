@@ -15,7 +15,7 @@ export const verify = ({ user, bodymen: { body } }, res, next) =>
         return null;
       }
       user.set({ verified: true }).save();
-      return verified_f;
+      return verified;
     })
     .then((verified) =>
       verified

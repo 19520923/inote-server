@@ -37,7 +37,7 @@ const userSchema = new Schema(
       type: String,
       trim: true,
     },
-    dateOfBirth: {
+    date_of_birth: {
       type: Date,
       max: new Date(),
       min: "1900-01-01",
@@ -53,11 +53,11 @@ const userSchema = new Schema(
       type: String,
       enum: USER_GENDER,
     },
-    isFirstLogin: {
+    is_first_login: {
       type: Boolean,
       default: true,
     },
-    interest: [
+    interests: [
       {
         type: Schema.ObjectId,
         ref: "Interest",
@@ -121,10 +121,10 @@ userSchema.methods = {
         "phone",
         "created_at",
         "updated_at",
-        "dateOfBirth",
+        "date_of_birth",
         "about",
         "job",
-        "isFirstLogin",
+        "is_first_login",
         "deleted_flag",
         "interest",
         "gender",

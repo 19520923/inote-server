@@ -14,6 +14,7 @@ import {
   update,
   updatePassword,
   destroy,
+  forgotPassword,
 } from "./controller";
 import { schema } from "./model";
 export User, { schema } from "./model";
@@ -26,10 +27,11 @@ const {
   avatar,
   phone,
   about,
-  dateOfBirth,
+  date_of_birth,
   job,
+  gender,
   interest,
-  isFirstLogin,
+  is_first_login,
   deleted_flag,
 } = schema.tree;
 
@@ -106,9 +108,10 @@ router.put(
     about,
     job,
     interest,
+    gender,
     deleted_flag,
-    dateOfBirth,
-    isFirstLogin,
+    date_of_birth,
+    is_first_login,
   }),
   update
 );
@@ -137,5 +140,7 @@ router.put("/:id/password", passwordAuth(), body({ password }), updatePassword);
  * @apiError 404 User not found.
  */
 router.delete("/:id", token({ required: true, roles: ["admin"] }), destroy);
+
+router.post("/forgot-password", master(), body({ email }), forgotPassword);
 
 export default router;
