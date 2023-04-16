@@ -8,6 +8,11 @@ import { USER_GENDER, USER_ROLES } from "../../constants";
 
 const userSchema = new Schema(
   {
+    username: {
+      types: String,
+      trim: true,
+      lowercase: true,
+    },
     fullname: {
       type: String,
       index: true,
@@ -23,11 +28,6 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
       lowercase: true,
-    },
-    phone: {
-      type: String,
-      maxlength: 10,
-      trim: true,
     },
     password: {
       type: String,
