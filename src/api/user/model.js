@@ -40,7 +40,7 @@ const userSchema = new Schema(
     date_of_birth: {
       type: Date,
       max: new Date(),
-      min: "1900-01-01",
+      min: "01/01/1900",
     },
     about: {
       type: String,
