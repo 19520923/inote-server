@@ -9,7 +9,7 @@ import { USER_GENDER, USER_ROLES } from "../../constants";
 const userSchema = new Schema(
   {
     username: {
-      types: String,
+      type: String,
       trim: true,
       lowercase: true,
     },
@@ -171,7 +171,7 @@ userSchema.statics = {
 };
 
 userSchema.plugin(mongooseKeywords, {
-  paths: ["email", "fullname", "phone"],
+  paths: ["email", "fullname", "username"],
 });
 
 const model = mongoose.model("User", userSchema);
