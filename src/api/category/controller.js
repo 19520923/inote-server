@@ -1,5 +1,7 @@
 import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Category } from ".";
+import _ from "lodash";
+import { mongooseObjectID } from "../../constants";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Category.create({ ...body, author: user })
@@ -42,3 +44,33 @@ export const destroy = ({ user, params }, res, next) =>
     .then((category) => (category ? category.remove() : null))
     .then(success(res, 204))
     .catch(next);
+
+export const sync = async ({ user, bodymen: { body } }, res, next) => {
+    const res_data = await Promise.all(
+      body.categories.map((cate, index) =>
+        mongooseObjectID.test(cate.id)
+          ? Category.findById(cate.id)
+              .then((category) =>
+                category
+                  ? Object.assign(category, cate).save()
+                  : Category.create({ ...cate, author: user })
+              )
+              .then((category) => category.view())
+              .then((category) => ({ id: cate.id, category: category }))
+              .catch((error) => ({
+                index: index,
+                error: _.get(error, "message", "Internal server"),
+              }))
+          : Category.create({ ...cate, author: user })
+              .then((category) => category.view())
+              .then((category) => ({ id: cate.id, category: category }))
+              .catch((error) => ({
+                index: index,
+                error: _.get(error, "message", "Internal server"),
+              }))
+      )
+    );
+    res.status(200).json({ categories: res_data }).end();
+  
+  next();
+};

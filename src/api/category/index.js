@@ -1,13 +1,15 @@
 import { Router } from "express";
 import { middleware as query } from "querymen";
 import { middleware as body } from "bodymen";
-import { create, index, update, destroy } from "./controller";
-import { schema } from "./model";
+import { create, index, update, destroy, sync } from "./controller";
+import { schema, sync_schema } from "./model";
 import { token } from "../../services/passport";
 export Category, { schema } from "./model";
 
 const router = new Router();
-const { name, isHide, order } = schema.tree;
+const { name, is_hide, order, updated_at, deleted_flag, created_at } =
+  schema.tree;
+const { categories } = sync_schema.tree;
 
 /**
  * @api {post} /categories Create category
@@ -21,7 +23,12 @@ const { name, isHide, order } = schema.tree;
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Category not found.
  */
-router.post("/", token({ required: true }), body({ name, order }), create);
+router.post(
+  "/",
+  token({ required: true }),
+  body({ name, order, created_at, updated_at }),
+  create
+);
 
 /**
  * @api {get} /categories Retrieve categories
@@ -49,7 +56,7 @@ router.get("/", token({ required: true }), query(), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ name, isHide, order }),
+  body({ name, is_hide, order, deleted_flag, updated_at }),
   update
 );
 
@@ -61,5 +68,6 @@ router.put(
  * @apiError 404 Category not found.
  */
 router.delete("/:id", token({ required: true }), destroy);
+router.post("/sync", token({ required: true }), body({ categories }), sync);
 
 export default router;

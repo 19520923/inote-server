@@ -7,17 +7,13 @@ const notificationSchema = new Schema(
     content: {
       type: String,
     },
-    isSeen: {
+    is_seen: {
       type: Boolean,
       default: false,
     },
     type: {
       type: String,
       enum: NOTIFICATION_TYPES,
-    },
-    isSystem: {
-      type: Boolean,
-      default: true,
     },
     author: {
       type: Schema.ObjectId,
@@ -66,7 +62,6 @@ notificationSchema.methods = {
       content: this.content,
       isSeen: this.isSeen,
       type: this.type,
-      isSystem: this.isSystem,
       author: this.author.view(),
       data: this.data,
       receiver: this.receiver,

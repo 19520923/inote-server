@@ -2,12 +2,22 @@ import { Router } from "express";
 import { middleware as query } from "querymen";
 import { middleware as body } from "bodymen";
 import { token } from "../../services/passport";
-import { create, index, update, destroy } from "./controller";
-import { schema } from "./model";
+import { create, index, update, destroy, sync } from "./controller";
+import { schema, sync_schema } from "./model";
 export Reminder, { schema } from "./model";
 
 const router = new Router();
-const { title, content, time, is_done, is_remind, deleted_flag } = schema.tree;
+const {
+  title,
+  content,
+  time,
+  is_done,
+  is_remind,
+  deleted_flag,
+  created_at,
+  updated_at,
+} = schema.tree;
+const { reminders } = sync_schema.tree;
 
 /**
  * @api {post} /reminders Create reminder
@@ -29,7 +39,16 @@ const { title, content, time, is_done, is_remind, deleted_flag } = schema.tree;
 router.post(
   "/",
   token({ required: true }),
-  body({ title, content, time, is_done, is_remind, deleted_flag }),
+  body({
+    title,
+    content,
+    time,
+    is_done,
+    is_remind,
+    deleted_flag,
+    created_at,
+    updated_at,
+  }),
   create
 );
 
@@ -67,7 +86,7 @@ router.get("/", token({ required: true }), query(), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ title, content, time, is_done, is_remind, deleted_flag }),
+  body({ title, content, time, is_done, is_remind, deleted_flag, updated_at }),
   update
 );
 
@@ -82,5 +101,6 @@ router.put(
  * @apiError 401 user access only.
  */
 router.delete("/:id", token({ required: true }), destroy);
+router.post("/sync", token({ required: true }), body({ reminders }), sync);
 
 export default router;

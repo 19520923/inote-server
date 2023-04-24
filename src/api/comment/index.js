@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Comment, { schema } from "./model";
 
 const router = new Router();
-const { content, task, deleted_flag } = schema.tree;
+const { content, task, deleted_flag, is_system } = schema.tree;
 
 /**
  * @api {post} /comments Create comment
@@ -24,7 +24,12 @@ const { content, task, deleted_flag } = schema.tree;
  * @apiError 404 Comment not found.
  * @apiError 401 user access only.
  */
-router.post("/", token({ required: true }), body({ content, task }), create);
+router.post(
+  "/",
+  token({ required: true }),
+  body({ content, task, is_system }),
+  create
+);
 
 /**
  * @api {get} /comments Retrieve comments

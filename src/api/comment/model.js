@@ -9,6 +9,10 @@ const commentSchema = new Schema(
       ref: "User",
       required: true,
     },
+    is_system: {
+      type: Boolean,
+      default: false,
+    },
     content: {
       type: String,
     },
@@ -63,6 +67,7 @@ commentSchema.methods = {
       content: this.content,
       task: this.task,
       deleted_flag: this.deleted_flag,
+      is_system: this.is_system,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };

@@ -1,5 +1,7 @@
 import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Note } from ".";
+import _ from "lodash";
+import { mongooseObjectID } from "../../constants";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Note.create({ ...body, author: user })
@@ -49,3 +51,32 @@ export const destroy = ({ user, params }, res, next) =>
     .then((note) => (note ? note.remove() : null))
     .then(success(res, 204))
     .catch(next);
+
+export const sync = async ({ user, bodymen: { body } }, res, next) => {
+  const res_data = await Promise.all(
+    body.notes.map((n, index) =>
+      mongooseObjectID.test(n.id)
+        ? Note.findById(n.id)
+            .then((note) =>
+              note
+                ? Object.assign(note, n).save()
+                : Note.create({ ...n, author: user })
+            )
+            .then((note) => note.view(true))
+            .then((note) => ({ id: n.id, note: note }))
+            .catch((error) => ({
+              index: index,
+              error: _.get(error, "message", "Internal server"),
+            }))
+        : Note.create({ ...n, author: user })
+            .then((note) => note.view(true))
+            .then((note) => ({ id: n.id, note: note }))
+            .catch((error) => ({
+              index: index,
+              error: _.get(error, "message", "Internal server"),
+            }))
+    )
+  );
+  res.status(200).json({ notes: res_data }).end();
+  next();
+};

@@ -41,6 +41,10 @@ const reminderSchema = new Schema(
   }
 );
 
+const syncReminderSchema = new Schema({
+  reminders: [{ type: reminderSchema, required: true }],
+});
+
 reminderSchema.methods = {
   view() {
     return {
@@ -59,6 +63,8 @@ reminderSchema.methods = {
 };
 
 const model = mongoose.model("Reminder", reminderSchema);
+const sync_model = mongoose.model("SyncReminder", syncReminderSchema);
 
 export const schema = model.schema;
+export const sync_schema = sync_model.schema;
 export default model;

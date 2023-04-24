@@ -2,7 +2,17 @@ import { Router } from "express";
 import { middleware as query } from "querymen";
 import { middleware as body } from "bodymen";
 import { token } from "../../services/passport";
-import { create, index, show, update, destroy } from "./controller";
+import {
+  create,
+  index,
+  show,
+  update,
+  destroy,
+  addMembers,
+  removeMembers,
+  addHosts,
+  removeHosts,
+} from "./controller";
 import { schema } from "./model";
 export Project, { schema } from "./model";
 
@@ -127,5 +137,33 @@ router.put(
  * @apiError 401 user access only.
  */
 router.delete("/:id", token({ required: true }), destroy);
+
+router.put(
+  "/:id/add-members",
+  token({ required: true }),
+  body({ members }),
+  addMembers
+);
+
+router.put(
+  "/:id/remove-members",
+  token({ required: true }),
+  body({ members }),
+  removeMembers
+);
+
+router.put(
+  "/:id/add-hosts",
+  token({ required: true }),
+  body({ hosts }),
+  addHosts
+);
+
+router.put(
+  "/:id/remove-hosts",
+  token({ required: true }),
+  body({ hosts }),
+  removeHosts
+);
 
 export default router;

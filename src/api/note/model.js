@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseKeywords from "mongoose-keywords";
+import { NOTE_TYPE } from "../../constants";
 
 const noteSchema = new Schema(
   {
@@ -35,11 +36,20 @@ const noteSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    type: {
+      type: String,
+      enum: NOTE_TYPE,
+      default: "note",
+    },
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
   }
 );
+
+const syncSchema = new Schema({
+  notes: [{ type: noteSchema, required: true }],
+});
 
 noteSchema.methods = {
   view() {
@@ -52,6 +62,7 @@ noteSchema.methods = {
       category: this.category,
       opened_at: this.opened_at,
       starred: this.starred,
+      type: this.type,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };
@@ -61,6 +72,8 @@ noteSchema.methods = {
 noteSchema.plugin(mongooseKeywords, { paths: ["title"] });
 
 const model = mongoose.model("Note", noteSchema);
+const sync_model = mongoose.model("SyncNote", syncSchema);
 
 export const schema = model.schema;
+export const sync_schema = sync_model.schema;
 export default model;

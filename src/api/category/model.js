@@ -6,7 +6,7 @@ const categorySchema = new Schema(
       type: String,
       required: true,
     },
-    isHide: {
+    is_hide: {
       type: Boolean,
       default: false,
     },
@@ -26,6 +26,11 @@ const categorySchema = new Schema(
   }
 );
 
+const syncCategoriesSchema = new Schema({
+  // categories: [{ type: categorySchema, required: true }],
+  categories: [{ type: categorySchema, required: true }],
+});
+
 categorySchema.methods = {
   view() {
     return {
@@ -41,6 +46,8 @@ categorySchema.methods = {
 };
 
 const model = mongoose.model("Category", categorySchema);
+const sync_model = mongoose.model("SyncCategory", syncCategoriesSchema);
 
 export const schema = model.schema;
+export const sync_schema = sync_model.schema;
 export default model;

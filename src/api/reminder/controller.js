@@ -40,3 +40,32 @@ export const destroy = ({ user, params }, res, next) =>
     .then((reminder) => (reminder ? reminder.remove() : null))
     .then(success(res, 204))
     .catch(next);
+
+export const sync = async ({ user, bodymen: { body } }, res, next) => {
+  const res_data = await Promise.all(
+    body.reminders.map((r, index) =>
+      r.id
+        ? Reminder.findById(r.id)
+            .then((reminder) =>
+              reminder
+                ? Object.assign(reminder, r).save()
+                : Reminder.create({ ...r, author: user })
+            )
+            .then((reminder) => reminder.view(true))
+            .then((reminder) => ({ index: index, reminder: reminder }))
+            .catch((error) => ({
+              index: index,
+              error: _.get(error, "message", "Internal server"),
+            }))
+        : Reminder.create({ ...r, author: user })
+            .then((reminder) => reminder.view(true))
+            .then((reminder) => ({ index: index, reminder: reminder }))
+            .catch((error) => ({
+              index: index,
+              error: _.get(error, "message", "Internal server"),
+            }))
+    )
+  );
+  res.status(200).json({ reminders: res_data }).end();
+  next();
+};

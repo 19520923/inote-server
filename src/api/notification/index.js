@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Notification, { schema } from "./model";
 
 const router = new Router();
-const { content, type, isSystem, receiver, isSeen } = schema.tree;
+const { content, type, receiver, isSeen } = schema.tree;
 
 /**
  * @api {post} /notifications Create notification
@@ -30,7 +30,7 @@ const { content, type, isSystem, receiver, isSeen } = schema.tree;
 router.post(
   "/",
   token({ required: true }),
-  body({ content, type, isSystem, receiver }),
+  body({ content, type, receiver }),
   create
 );
 

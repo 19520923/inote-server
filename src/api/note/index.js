@@ -2,17 +2,29 @@ import { Router } from "express";
 import { middleware as query, Schema } from "querymen";
 import { middleware as body } from "bodymen";
 import { token } from "../../services/passport";
-import { create, index, show, update, destroy } from "./controller";
-import { schema } from "./model";
+import { create, index, show, update, destroy, sync } from "./controller";
+import { schema, sync_schema } from "./model";
 export Note, { schema } from "./model";
 
 const router = new Router();
-const { title, icon, content, category, opened_at, starred, deleted_flag } =
-  schema.tree;
+const {
+  title,
+  icon,
+  content,
+  category,
+  opened_at,
+  starred,
+  deleted_flag,
+  created_at,
+  updated_at,
+  type,
+} = schema.tree;
 
 const schema_q = new Schema({
   category: String,
 });
+
+const { notes } = sync_schema.tree;
 /**
  * @api {post} /notes Create note
  * @apiName CreateNote
@@ -34,7 +46,7 @@ const schema_q = new Schema({
 router.post(
   "/",
   token({ required: true }),
-  body({ title, icon, content, category }),
+  body({ title, icon, content, category, type }),
   create
 );
 
@@ -86,7 +98,15 @@ router.get("/:id", token({ required: true }), show);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ title, icon, content, category, opened_at, starred, deleted_flag }),
+  body({
+    title,
+    icon,
+    content,
+    category,
+    opened_at,
+    starred,
+    deleted_flag,
+  }),
   update
 );
 
@@ -101,5 +121,7 @@ router.put(
  * @apiError 401 user access only.
  */
 router.delete("/:id", token({ required: true }), destroy);
+
+router.post("/sync", token({ required: true }), body({ notes }), sync);
 
 export default router;
