@@ -46,7 +46,16 @@ const { notes } = sync_schema.tree;
 router.post(
   "/",
   token({ required: true }),
-  body({ title, icon, content, category, type }),
+  body({
+    title,
+    icon,
+    content,
+    category,
+    type,
+    updated_at,
+    created_at,
+    opened_at,
+  }),
   create
 );
 
@@ -106,6 +115,7 @@ router.put(
     opened_at,
     starred,
     deleted_flag,
+    updated_at,
   }),
   update
 );

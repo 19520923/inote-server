@@ -2,50 +2,53 @@ import mongoose, { Schema } from "mongoose";
 import mongooseKeywords from "mongoose-keywords";
 import { NOTE_TYPE } from "../../constants";
 
-const noteSchema = new Schema(
-  {
-    author: {
-      type: Schema.ObjectId,
-      ref: "User",
-      required: true,
-      index: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
-    icon: {
-      type: String,
-    },
-    content: {
-      type: String,
-    },
-    category: {
-      type: Schema.ObjectId,
-      ref: "Category",
-    },
-    opened_at: {
-      type: Date,
-      default: new Date(),
-    },
-    starred: {
-      type: Boolean,
-      default: false,
-    },
-    deleted_flag: {
-      type: Boolean,
-      default: false,
-    },
-    type: {
-      type: String,
-      enum: NOTE_TYPE,
-      default: "note",
-    },
+const noteSchema = new Schema({
+  author: {
+    type: Schema.ObjectId,
+    ref: "User",
+    required: true,
+    index: true,
   },
-  {
-    timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
-  }
-);
+  title: {
+    type: String,
+    required: true,
+  },
+  icon: {
+    type: String,
+  },
+  content: {
+    type: String,
+  },
+  category: {
+    type: Schema.ObjectId,
+    ref: "Category",
+  },
+  opened_at: {
+    type: Date,
+    default: new Date(),
+  },
+  starred: {
+    type: Boolean,
+    default: false,
+  },
+  deleted_flag: {
+    type: Boolean,
+    default: false,
+  },
+  type: {
+    type: String,
+    enum: NOTE_TYPE,
+    default: "note",
+  },
+  updated_at: {
+    type: Date,
+    default: new Date(),
+  },
+  created_at: {
+    type: Date,
+    default: new Date(),
+  },
+});
 
 const syncSchema = new Schema({
   notes: [{ type: noteSchema, required: true }],
