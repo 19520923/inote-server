@@ -126,7 +126,7 @@ userSchema.methods = {
         "job",
         "is_first_login",
         "deleted_flag",
-        "interest",
+        "interests",
         "gender",
       ];
     }

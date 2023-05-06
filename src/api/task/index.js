@@ -10,12 +10,12 @@ const router = new Router();
 const {
   project,
   parent,
-  description,
+  content,
   subject,
   assignee,
   status,
   priority,
-  mileston,
+  milestone,
   estimate,
   actual,
   start_date,
@@ -24,7 +24,6 @@ const {
   opened_at,
   deleted_flag,
   is_remind,
-  registered_by,
 } = schema.tree;
 
 const schema_q = new Schema({
@@ -37,7 +36,7 @@ const schema_q = new Schema({
   registered_by: String,
   is_remind: Boolean,
   status: String,
-  mileston: String,
+  milestone: String,
 });
 /**
  * @api {post} /tasks Create task
@@ -53,7 +52,7 @@ const schema_q = new Schema({
  * @apiParam assignee Task's assignee.
  * @apiParam status Task's status.
  * @apiParam priorty Task's priorty.
- * @apiParam mileston Task's mileston.
+ * @apiParam milestone Task's milestone.
  * @apiParam estimate Task's estimate.
  * @apiParam actual Task's actual.
  * @apiParam startDate Task's startDate.
@@ -73,19 +72,18 @@ router.post(
   body({
     project,
     parent,
-    description,
+    content,
     subject,
     assignee,
     status,
     priority,
-    mileston,
+    milestone,
     estimate,
     actual,
     start_date,
     due_date,
     end_date,
     is_remind,
-    registered_by,
   }),
   create
 );
@@ -131,7 +129,7 @@ router.get("/:id", token({ required: true }), show);
  * @apiParam assignee Task's assignee.
  * @apiParam status Task's status.
  * @apiParam priorty Task's priorty.
- * @apiParam mileston Task's mileston.
+ * @apiParam milestone Task's milestone.
  * @apiParam estimate Task's estimate.
  * @apiParam actual Task's actual.
  * @apiParam startDate Task's startDate.
@@ -149,14 +147,13 @@ router.put(
   "/:id",
   token({ required: true }),
   body({
-    project,
     parent,
-    description,
+    content,
     subject,
     assignee,
     status,
     priority,
-    mileston,
+    milestone,
     estimate,
     actual,
     start_date,
@@ -165,7 +162,6 @@ router.put(
     opened_at,
     deleted_flag,
     is_remind,
-    registered_by,
   }),
   update
 );

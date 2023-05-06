@@ -10,7 +10,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
       Task.count({ project: body.project }).then((count) =>
         Task.create({
           ...body,
-          author: user,
+          registered_by: user,
           key: `${project.acronym}_${count + 1}`,
         })
           .then((task) => task.view(true))

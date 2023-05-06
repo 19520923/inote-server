@@ -37,6 +37,10 @@ class socket extends Function {
           socket.leave(project.id);
         });
       });
+
+      socket.on("connect_error", (err) => {
+        console.log(`connect_error due to ${err.message}`);
+      });
     });
   }
 

@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const milestonSchema = new Schema(
+const milestoneSchema = new Schema(
   {
     author: {
       type: Schema.ObjectId,
@@ -25,7 +25,7 @@ const milestonSchema = new Schema(
   }
 );
 
-milestonSchema.methods = {
+milestoneSchema.methods = {
   view() {
     return {
       // simple view
@@ -35,7 +35,7 @@ milestonSchema.methods = {
   },
 };
 
-const model = mongoose.model("Mileston", milestonSchema);
+const model = mongoose.model("Milestone", milestoneSchema);
 
 export const schema = model.schema;
 export default model;

@@ -26,7 +26,7 @@ const taskSchema = new Schema(
       index: true,
       unique: true,
     },
-    description: {
+    content: {
       type: String,
     },
     subject: {
@@ -44,14 +44,16 @@ const taskSchema = new Schema(
     status: {
       type: String,
       enum: TASK_STATUS,
+      default: TASK_STATUS[0],
     },
     priority: {
       type: String,
       enum: TASK_PRIORITY,
+      default: TASK_STATUS[0],
     },
-    mileston: {
+    milestone: {
       type: Schema.ObjectId,
-      ref: "Mileston",
+      ref: "Milestone",
     },
     estimate: {
       type: Number,
@@ -63,11 +65,9 @@ const taskSchema = new Schema(
     },
     start_date: {
       type: Date,
-      min: new Date(),
     },
     due_date: {
       type: Date,
-      min: new Date(),
     },
     end_date: {
       type: Date,
@@ -80,9 +80,9 @@ const taskSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    reminderFlag: {
+    is_remind: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   {
@@ -119,7 +119,7 @@ taskSchema.pre(/^find/, function (next) {
     return next();
   }
   this.populate({
-    path: "author registered_by assignee mileston children",
+    path: "author registered_by assignee milestone children",
     options: { _recursed: true },
   });
   next();
@@ -127,10 +127,10 @@ taskSchema.pre(/^find/, function (next) {
 
 taskSchema.post(/^save/, async function (child) {
   try {
-    if (!child.populated("author registered_by assignee mileston")) {
+    if (!child.populated("author registered_by assignee milestone")) {
       const task = await child
         .populate({
-          path: "author registered_by assignee mileston",
+          path: "author registered_by assignee milestone",
           options: { _recursed: true },
         })
         .execPopulate();
@@ -149,29 +149,31 @@ taskSchema.methods = {
       key: this.key,
       priority: this.priority,
       status: this.status,
-      registered_by: this.registered_by.view(),
-      assignee: this.assignee.view(),
-      reminderFlag: this.reminderFlag,
+      registered_by: this.registered_by
+        ? this.registered_by.view()
+        : this.registered_by,
+      assignee: this.assignee ? this.assignee.view() : this.assignee,
+      is_remind: this.is_remind,
       due_date: this.due_date,
-      mileston: this.mileston ? this.mileston.view() : this.mileston,
+      milestone: this.milestone ? this.milestone.view() : this.milestone,
     };
 
     return full
       ? {
           ...view,
           start_date: this.start_date,
-          author: this.author.view(),
           end_date: this.end_date,
           created_at: this.created_at,
           updated_at: this.updated_at,
           estimate: this.estimate,
           actual: this.actual,
-          description: this.description,
+          content: this.content,
           opened_at: this.opened_at,
           children: this.children
             ? this.children.map((child) => child.view())
             : this.children,
           parent: this.parent,
+          project: this.project,
         }
       : view;
   },

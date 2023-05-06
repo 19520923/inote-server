@@ -1,19 +1,19 @@
 import { success, notFound } from "../../services/response/";
-import { Mileston } from ".";
+import { Milestone } from ".";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
-  Mileston.create({ ...body, author: user })
-    .then((mileston) => mileston.view())
+  Milestone.create({ ...body, author: user })
+    .then((milestone) => milestone.view())
     .then(success(res, 201))
     .catch(next);
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  Mileston.count({ ...query, deleted_flag: false })
+  Milestone.count({ ...query, deleted_flag: false })
     .then((count) =>
-      Mileston.find({ ...query, deleted_flag: false }, select, cursor).then(
-        (milestons) => ({
+      Milestone.find({ ...query, deleted_flag: false }, select, cursor).then(
+        (milestones) => ({
           count,
-          rows: milestons.map((mileston) => mileston.view()),
+          rows: milestones.map((milestone) => milestone.view()),
         })
       )
     )
@@ -21,18 +21,18 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     .catch(next);
 
 export const update = ({ user, bodymen: { body }, params }, res, next) =>
-  Mileston.findById(params.id)
+  Milestone.findById(params.id)
     .then(notFound(res))
-    .then((mileston) =>
-      mileston ? Object.assign(mileston, body).save() : null
+    .then((milestone) =>
+      milestone ? Object.assign(milestone, body).save() : null
     )
-    .then((mileston) => (mileston ? mileston.view() : null))
+    .then((milestone) => (milestone ? milestone.view() : null))
     .then(success(res))
     .catch(next);
 
 export const destroy = ({ user, params }, res, next) =>
-  Mileston.findById(params.id)
+  Milestone.findById(params.id)
     .then(notFound(res))
-    .then((mileston) => (mileston ? mileston.remove() : null))
+    .then((milestone) => (milestone ? milestone.remove() : null))
     .then(success(res, 204))
     .catch(next);

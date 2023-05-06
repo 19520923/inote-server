@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { middleware as query } from "querymen";
+import { Schema, middleware as query } from "querymen";
 import { middleware as body } from "bodymen";
 import { token } from "../../services/passport";
 import { create, index, update, destroy } from "./controller";
@@ -8,6 +8,12 @@ export Comment, { schema } from "./model";
 
 const router = new Router();
 const { content, task, deleted_flag, is_system } = schema.tree;
+const q_schema = new Schema({
+  task: {
+    type: String,
+    required: true,
+  },
+});
 
 /**
  * @api {post} /comments Create comment
@@ -43,7 +49,7 @@ router.post(
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 401 user access only.
  */
-router.get("/", token({ required: true }), query(), index);
+router.get("/", token({ required: true }), query(q_schema), index);
 
 /**
  * @api {put} /comments/:id Update comment

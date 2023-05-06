@@ -27,6 +27,7 @@ const {
   status,
   members,
   deleted_flag,
+  description
 } = schema.tree;
 
 /**
@@ -58,6 +59,7 @@ router.post(
     acronym,
     hosts,
     members,
+    description,
   }),
   create
 );
@@ -121,6 +123,7 @@ router.put(
     sprintlength,
     status,
     members,
+    description,
     deleted_flag,
   }),
   update
