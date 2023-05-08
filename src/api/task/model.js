@@ -119,7 +119,7 @@ taskSchema.pre(/^find/, function (next) {
     return next();
   }
   this.populate({
-    path: "author registered_by assignee milestone children",
+    path: "registered_by assignee milestone children",
     options: { _recursed: true },
   });
   next();
@@ -127,10 +127,10 @@ taskSchema.pre(/^find/, function (next) {
 
 taskSchema.post(/^save/, async function (child) {
   try {
-    if (!child.populated("author registered_by assignee milestone")) {
+    if (!child.populated("registered_by assignee milestone")) {
       const task = await child
         .populate({
-          path: "author registered_by assignee milestone",
+          path: "registered_by assignee milestone",
           options: { _recursed: true },
         })
         .execPopulate();

@@ -8,7 +8,9 @@ class socket extends Function {
   }
 
   connect(server) {
-    this.io = new Server(server, { cors: { origin: "*" } });
+    this.io = new Server(server, {
+      cors: { origin: "*" },
+    });
     this.io.use(this.wrapMiddlewareForSocketIo(passport.initialize()));
     this.io.use(this.wrapMiddlewareForSocketIo(passport.session()));
     this.io.use(this.wrapMiddlewareForSocketIo(passport.authenticate(["jwt"])));

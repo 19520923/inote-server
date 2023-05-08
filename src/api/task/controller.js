@@ -45,12 +45,12 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then((task) => (task ? Object.assign(task, body).save() : null))
     .then(async (task) => {
       if (task) {
-        if (user.id !== task.author.id) {
+        if (user.id !== task.registered_by.id) {
           await Notification.create({
             content: `${task.subject} (${task.key}) has been updated`,
             author: user,
             type: "task",
-            receiver: task.author.id,
+            receiver: task.registered_by.id,
             data: task.id,
           });
         }
