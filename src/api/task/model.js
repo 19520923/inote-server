@@ -6,11 +6,6 @@ import socket from "../../services/socket";
 
 const taskSchema = new Schema(
   {
-    author: {
-      type: Schema.ObjectId,
-      ref: "User",
-      required: true,
-    },
     project: {
       type: Schema.ObjectId,
       ref: "Project",
