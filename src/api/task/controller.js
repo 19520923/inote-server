@@ -2,6 +2,9 @@ import { success, notFound } from "../../services/response/";
 import { Task } from ".";
 import { Notification } from "../notification";
 import { Project } from "../project";
+import { Comment } from "../comment";
+import { getChangesContent } from "../../utils/comment";
+import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Project.findById(body.project)
@@ -14,6 +17,14 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
           key: `${project.acronym}_${count + 1}`,
         })
           .then((task) => task.view(true))
+          .then(async (task) => {
+            await Comment.create({
+              task: task.id,
+              author: user,
+              content: "Create new task",
+            });
+            return task;
+          })
           .then(success(res, 201))
           .catch(next)
       )
@@ -42,7 +53,19 @@ export const show = ({ params }, res, next) =>
 export const update = ({ user, bodymen: { body }, params }, res, next) =>
   Task.findById(params.id)
     .then(notFound(res))
-    .then((task) => (task ? Object.assign(task, body).save() : null))
+    .then(async (task) => {
+      if (!task) return null;
+      const oldTask = _.cloneDeep(task);
+      const newTask = Object.assign(task, body);
+      const changes = task.getChanges().$set;
+      await Comment.create({
+        author: user,
+        task: task.id,
+        content: getChangesContent(oldTask, changes),
+      });
+      return newTask.save();
+    })
+    // .then((task) => (task ? Object.assign(task, body).save() : null))
     .then(async (task) => {
       if (task) {
         if (user.id !== task.registered_by.id) {

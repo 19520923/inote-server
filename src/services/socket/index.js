@@ -8,9 +8,7 @@ class socket extends Function {
   }
 
   connect(server) {
-    this.io = new Server(server, {
-      cors: { origin: "*" },
-    });
+    this.io = new Server(server, { cors: { origin: "*" } });
     this.io.use(this.wrapMiddlewareForSocketIo(passport.initialize()));
     this.io.use(this.wrapMiddlewareForSocketIo(passport.session()));
     this.io.use(this.wrapMiddlewareForSocketIo(passport.authenticate(["jwt"])));
@@ -27,6 +25,8 @@ class socket extends Function {
       projects.forEach((project) => {
         socket.join(project.id);
       });
+
+      console.log(socket.rooms);
 
       socket.emit("user:connect", { user_id: user.id });
 
@@ -57,9 +57,9 @@ class socket extends Function {
     };
   }
 
-  async to(message, socket_id, data) {
+  to(message, socket_id, data) {
     if (socket_id && data) {
-      this.io.to(socket_id).emit(message, data);
+      this.io.emit(message, data);
     }
     return data;
   }

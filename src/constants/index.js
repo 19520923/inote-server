@@ -23,3 +23,5 @@ export const MESSAGE_TYPE = ["text", "image", "quote", "video"];
 export const NOTE_TYPE = ["text", "draw"];
 
 export const mongooseObjectID = /^[0-9a-fA-F]{24}$/;
+
+export const DATE_FORMAT = "DD/MM/yyyy";

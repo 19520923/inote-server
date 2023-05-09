@@ -44,15 +44,16 @@ commentSchema.pre(/^find/, function (next) {
 commentSchema.post(/^save/, async function (child) {
   try {
     const task = await Task.findById(child.task);
+    let data = child
     if (!child.populated("author")) {
-      const comment = await child
+      data = await child
         .populate({
           path: "author",
           options: { _recursed: true },
         })
         .execPopulate();
-      socket.to("comment:update", task.project, comment.view());
     }
+    socket.to("comment:update", task.project, data.view());
   } catch (err) {
     console.log(err);
   }

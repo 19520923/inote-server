@@ -3,6 +3,7 @@ import { TASK_PRIORITY, TASK_STATUS } from "../../constants";
 import mongooseKeywords from "mongoose-keywords";
 import { Notification } from "../notification";
 import socket from "../../services/socket";
+import _ from "lodash";
 
 const taskSchema = new Schema(
   {
@@ -98,17 +99,6 @@ taskSchema.virtual("children", {
   sort: { created_at: 1 },
 });
 
-taskSchema.path("assignee").set(function (assignee) {
-  Notification.create({
-    content: `${this.subject} (${this.key}) has been assigned to you`,
-    author: this.registered_by,
-    type: "task",
-    receiver: assignee,
-    data: this.id,
-  });
-  return assignee;
-});
-
 taskSchema.pre(/^find/, function (next) {
   if (this.options._recursed) {
     return next();
@@ -118,6 +108,19 @@ taskSchema.pre(/^find/, function (next) {
     options: { _recursed: true },
   });
   next();
+});
+
+taskSchema.pre(/^save/, async function (next) {
+  const changes = this.getChanges().$set;
+  if (_.includes(["assignee"], changes)) {
+    await Notification.create({
+      content: `${this.subject} (${this.key}) has been assigned to you`,
+      author: this.registered_by,
+      type: "task",
+      receiver: assignee,
+      data: this.id,
+    });
+  }
 });
 
 taskSchema.post(/^save/, async function (child) {
