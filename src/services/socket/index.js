@@ -59,7 +59,7 @@ class socket extends Function {
 
   to(message, socket_id, data) {
     if (socket_id && data) {
-      this.io.emit(message, data);
+      this.io.in(socket_id).emit(message, data);
     }
     return data;
   }
