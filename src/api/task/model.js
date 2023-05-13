@@ -126,14 +126,14 @@ taskSchema.pre(/^save/, async function (next) {
 taskSchema.post(/^save/, async function (child) {
   try {
     if (!child.populated("registered_by assignee milestone")) {
-      const task = await child
+      await child
         .populate({
           path: "registered_by assignee milestone",
           options: { _recursed: true },
         })
         .execPopulate();
-      socket.to("task:update", child.project, task.view(true));
     }
+    socket.to("task:update", child.project.toString(), child.view(true));
   } catch (err) {
     console.log(err);
   }

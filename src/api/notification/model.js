@@ -50,7 +50,7 @@ notificationSchema.pre(/^find/, function (next) {
 
 notificationSchema.post(/^save/, async function (child) {
   try {
-    socket.to("notification:create", child.receiver, child.view());
+    socket.to("notification:create", child.receiver.toString(), child.view());
   } catch (err) {}
 });
 

@@ -44,6 +44,9 @@ class socket extends Function {
         });
       }
     });
+    this.io.of("/").adapter.on("join-room", (room, id) => {
+      console.log(`socket ${id} has joined room ${room}`);
+    });
   }
 
   wrapMiddlewareForSocketIo(middleware) {

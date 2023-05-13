@@ -55,16 +55,16 @@ messageSchema.pre(/^find/, function (next) {
 
 messageSchema.post(/^save/, async function (child) {
   try {
-    let message = child;
     if (!child.populated("author reply_to")) {
-      message = await child
+      await child
         .populate({
           path: "author reply_to",
           options: { _recursed: true },
         })
         .execPopulate();
     }
-    socket.to("message:update", child.project, message.view(true));
+
+    socket.to("message:update", child.project.toString(), child.view(true));
   } catch (err) {
     console.log(err);
   }
