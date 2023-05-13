@@ -28,6 +28,7 @@ const {
 
 const schema_q = new Schema({
   project: String,
+  assignee: String,
   priority: String,
   assignee: String,
   registered_by: String,

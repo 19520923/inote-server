@@ -154,6 +154,7 @@ taskSchema.methods = {
       is_remind: this.is_remind,
       due_date: this.due_date,
       milestone: this.milestone ? this.milestone.view() : this.milestone,
+      project: this.project,
     };
 
     return full
@@ -171,7 +172,6 @@ taskSchema.methods = {
             ? this.children.map((child) => child.view())
             : this.children,
           parent: this.parent,
-          project: this.project,
         }
       : view;
   },
