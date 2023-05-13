@@ -1,5 +1,6 @@
 import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Reminder } from ".";
+import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Reminder.create({ ...body, author: user })
@@ -27,7 +28,9 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(notFound(res))
     .then(authorOrAdmin(res, user, "author"))
     .then((reminder) =>
-      reminder ? Object.assign(reminder, body).save() : null
+      reminder
+        ? Object.assign(reminder, _.pickBy(body, _.identity)).save()
+        : null
     )
     .then((reminder) => (reminder ? reminder.view() : null))
     .then(success(res))
@@ -48,7 +51,7 @@ export const sync = async ({ user, bodymen: { body } }, res, next) => {
         ? Reminder.findById(r.id)
             .then((reminder) =>
               reminder
-                ? Object.assign(reminder, r).save()
+                ? Object.assign(reminder, _.pickBy(r, _.identity)).save()
                 : Reminder.create({ ...r, author: user })
             )
             .then((reminder) => reminder.view(true))

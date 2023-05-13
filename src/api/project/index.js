@@ -27,7 +27,8 @@ const {
   status,
   members,
   deleted_flag,
-  description
+  description,
+  wikis,
 } = schema.tree;
 
 /**
@@ -118,13 +119,11 @@ router.put(
     name,
     icon,
     acronym,
-    hosts,
-    author,
     sprintlength,
     status,
-    members,
     description,
     deleted_flag,
+    wikis,
   }),
   update
 );

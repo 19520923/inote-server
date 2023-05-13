@@ -1,5 +1,6 @@
 import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Comment } from ".";
+import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Comment.create({ ...body, author: user })
@@ -24,7 +25,9 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
   Comment.findById(params.id)
     .then(notFound(res))
     .then(authorOrAdmin(res, user, "author"))
-    .then((comment) => (comment ? Object.assign(comment, body).save() : null))
+    .then((comment) =>
+      comment ? Object.assign(comment, _.pickBy(body, _.identity)).save() : null
+    )
     .then((comment) => (comment ? comment.view() : null))
     .then(success(res))
     .catch(next);

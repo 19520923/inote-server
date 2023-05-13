@@ -14,6 +14,10 @@ const messageSchema = new Schema(
       type: Schema.ObjectId,
       ref: "Project",
     },
+    image: {
+      type: String,
+      default: "",
+    },
     reply_to: [
       {
         type: Schema.ObjectId,
@@ -51,15 +55,16 @@ messageSchema.pre(/^find/, function (next) {
 
 messageSchema.post(/^save/, async function (child) {
   try {
+    let message = child;
     if (!child.populated("author reply_to")) {
-      const message = await child
+      message = await child
         .populate({
           path: "author reply_to",
           options: { _recursed: true },
         })
         .execPopulate();
-      socket.to("message:update", child.project, message.view(true));
     }
+    socket.to("message:update", child.project, message.view(true));
   } catch (err) {
     console.log(err);
   }
@@ -72,12 +77,13 @@ messageSchema.methods = {
       id: this.id,
       author: this.author.view(),
       project: this.project,
-      reply_to: this.reply_to,
+      reply_to: this.reply_to.map((e) => e.view()),
       content: this.content,
       deleted_flag: this.deleted_flag,
       type: this.type,
       created_at: this.created_at,
       updated_at: this.updated_at,
+      image: this.image,
     };
 
     return full

@@ -1,5 +1,6 @@
 import { success, notFound } from "../../services/response/";
 import { Milestone } from ".";
+import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Milestone.create({ ...body, author: user })
@@ -24,7 +25,9 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
   Milestone.findById(params.id)
     .then(notFound(res))
     .then((milestone) =>
-      milestone ? Object.assign(milestone, body).save() : null
+      milestone
+        ? Object.assign(milestone, _.pickBy(body, _.identity)).save()
+        : null
     )
     .then((milestone) => (milestone ? milestone.view() : null))
     .then(success(res))

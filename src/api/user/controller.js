@@ -2,6 +2,7 @@ import { success, notFound } from "../../services/response/";
 import { User } from ".";
 import { VerifyCode } from "../verify-code";
 import { sendMail } from "../../services/nodemailer";
+import _ from "lodash";
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
   User.count({ ...query, deleted_flag: false })
@@ -72,7 +73,9 @@ export const update = ({ bodymen: { body }, params, user }, res, next) =>
       }
       return result;
     })
-    .then((user) => (user ? Object.assign(user, body).save() : null))
+    .then((user) =>
+      user ? Object.assign(user, _.pickBy(body, _.identity)).save() : null
+    )
     .then((user) => (user ? user.view(true) : null))
     .then(success(res))
     .catch(next);

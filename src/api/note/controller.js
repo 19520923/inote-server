@@ -59,7 +59,7 @@ export const sync = async ({ user, bodymen: { body } }, res, next) => {
         ? Note.findById(n.id)
             .then((note) =>
               note
-                ? Object.assign(note, n).save()
+                ? Object.assign(note, _.pickBy(n, _.identity)).save()
                 : Note.create({ ...n, author: user })
             )
             .then((note) => note.view(true))

@@ -69,13 +69,15 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(notFound(res))
     .then((project) => {
       const hostIndex = project.hosts.findIndex((host) => host.id === user.id);
-      if (hostIndex === -1 && project.author !== user.id) {
-        res.status(403).end();
+      if (hostIndex !== -1 && project.author.id !== user.id) {
+        res.status(403).json("Don't have permission").end();
         return null;
       }
       return project;
     })
-    .then((project) => (project ? Object.assign(project, body).save() : null))
+    .then((project) =>
+      project ? Object.assign(project, _.pickBy(body, _.identity)).save() : null
+    )
     .then((project) => {
       if (project) {
         project.members.forEach(async (member) => {
@@ -119,16 +121,13 @@ export const addMembers = ({ user, params, bodymen: { body } }, res, next) =>
         return null;
       }
       const unique = _.uniq(body.members);
-      const notExisted = _.difference(
-        unique,
-        project.members.map((member) => member.id)
-      );
-      const noHosts = _.difference(
-        notExisted,
-        project.hosts.map((host) => host.id)
-      );
-      if (noHosts.length > 0) {
-        noHosts.forEach(async (e) => {
+      const notExisted = _.difference(unique, [
+        ...project.members.map((member) => member.id),
+        ...project.hosts.map((host) => host.id),
+      ]);
+
+      if (notExisted.length > 0) {
+        notExisted.forEach(async (e) => {
           await Notification.create({
             content: `${project.name} (${project.acronym}) has been invited you as a member`,
             author: user,
@@ -137,7 +136,7 @@ export const addMembers = ({ user, params, bodymen: { body } }, res, next) =>
             data: project.id,
           });
         });
-        project.members.push(...noHosts);
+        project.members.push(...notExisted);
         return project.save();
       }
       return project;
@@ -183,16 +182,13 @@ export const addHosts = ({ user, params, bodymen: { body } }, res, next) =>
         return null;
       }
       const unique = _.uniq(body.hosts);
-      const notExisted = _.difference(
-        unique,
-        project.hosts.map((host) => host.id)
-      );
-      const noMembers = _.difference(
-        notExisted,
-        project.members.map((member) => member.id)
-      );
-      if (noMembers.length > 0) {
-        noMembers.forEach(async (e) => {
+      const notExisted = _.difference(unique, [
+        ...project.hosts.map((host) => host.id),
+        ...project.members.map((member) => member.id),
+      ]);
+
+      if (notExisted.length > 0) {
+        notExisted.forEach(async (e) => {
           await Notification.create({
             content: `${project.name} (${project.acronym}) has been invited you as a host`,
             author: user,
@@ -201,7 +197,7 @@ export const addHosts = ({ user, params, bodymen: { body } }, res, next) =>
             data: project.id,
           });
         });
-        project.hosts.push(...noMembers);
+        project.hosts.push(...notExisted);
         return project.save();
       }
       return project;

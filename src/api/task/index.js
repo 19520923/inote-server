@@ -27,16 +27,23 @@ const {
 } = schema.tree;
 
 const schema_q = new Schema({
-  project: {
-    type: String,
-    required: true,
-  },
+  project: String,
   priority: String,
   assignee: String,
   registered_by: String,
   is_remind: Boolean,
   status: String,
   milestone: String,
+  after: {
+    type: Date,
+    paths: ["due_date"],
+    operator: "$gte",
+  },
+  before: {
+    type: Date,
+    paths: ["due_date"],
+    operator: "$lte",
+  },
 });
 /**
  * @api {post} /tasks Create task

@@ -12,7 +12,7 @@ export const getChangesContent = (task, changes) => {
     if (e === "content") {
       return "Content updated";
     }
-    if (_.includes(["priority", "status"], e)) {
+    if (_.includes(["priority", "status", "assignee"], e)) {
       return `${e}: ${task[e]} → ${changes[e]}`;
     }
   });

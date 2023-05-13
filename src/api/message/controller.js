@@ -1,5 +1,6 @@
 import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Message } from ".";
+import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Message.create({ ...body, author: user })
@@ -24,7 +25,9 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
   Message.findById(params.id)
     .then(notFound(res))
     .then(authorOrAdmin(res, user, "author"))
-    .then((message) => (message ? Object.assign(message, body).save() : null))
+    .then((message) =>
+      message ? Object.assign(message, _.pickBy(body, _.identity)).save() : null
+    )
     .then((message) => (message ? message.view(true) : null))
     .then(success(res))
     .catch(next);

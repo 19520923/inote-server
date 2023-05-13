@@ -48,6 +48,13 @@ const projectSchema = new Schema(
         ref: "User",
       },
     ],
+    wikis: [
+      {
+        id: String,
+        title: String,
+        content: String,
+      },
+    ],
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -101,6 +108,7 @@ projectSchema.methods = {
           sprintlength: this.sprintlength,
           description: this.description,
           author: this.author.view(),
+          wiki: this.wiki,
         }
       : view;
   },

@@ -15,34 +15,34 @@ class socket extends Function {
 
     this.io.on("connection", async (socket) => {
       const user = socket.request.user;
-      socket.join(user.id);
+      if (user) {
+        socket.join(user.id);
 
-      const projects = await Project.find({
-        $or: [{ author: user.id }, { hosts: user.id }, { members: user.id }],
-        deleted_flag: false,
-      });
-
-      projects.forEach((project) => {
-        socket.join(project.id);
-      });
-
-      console.log(socket.rooms);
-
-      socket.emit("user:connect", { user_id: user.id });
-
-      socket.on("disconnect", async () => {
-        socket.emit("user:disconnect", {
-          user_id: user.id,
+        const projects = await Project.find({
+          $or: [{ author: user.id }, { hosts: user.id }, { members: user.id }],
+          deleted_flag: false,
         });
-        socket.leave(user.id);
+
         projects.forEach((project) => {
-          socket.leave(project.id);
+          socket.join(project.id);
         });
-      });
 
-      socket.on("connect_error", (err) => {
-        console.log(`connect_error due to ${err.message}`);
-      });
+        socket.emit("user:connect", { user_id: user.id });
+
+        socket.on("disconnect", async () => {
+          socket.emit("user:disconnect", {
+            user_id: user.id,
+          });
+          socket.leave(user.id);
+          projects.forEach((project) => {
+            socket.leave(project.id);
+          });
+        });
+
+        socket.on("connect_error", (err) => {
+          console.log(`connect_error due to ${err.message}`);
+        });
+      }
     });
   }
 

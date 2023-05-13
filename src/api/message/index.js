@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Message, { schema } from "./model";
 
 const router = new Router();
-const { project, reply_to, content, deleted_flag, type } = schema.tree;
+const { project, reply_to, content, deleted_flag, type, image } = schema.tree;
 
 const schema_q = new Schema({
   project: {
@@ -35,7 +35,7 @@ const schema_q = new Schema({
 router.post(
   "/",
   token({ required: true }),
-  body({ project, reply_to, content, type }),
+  body({ project, reply_to, content, type, image }),
   create
 );
 

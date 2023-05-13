@@ -56,7 +56,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(async (task) => {
       if (!task) return null;
       const oldTask = _.cloneDeep(task);
-      const newTask = Object.assign(task, body);
+      const newTask = Object.assign(task, _.pickBy(body, _.identity));
       const changes = task.getChanges().$set;
       await Comment.create({
         author: user,
