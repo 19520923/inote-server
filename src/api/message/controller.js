@@ -1,9 +1,25 @@
 import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Message } from ".";
 import _ from "lodash";
+import { getAnswer } from "../../services/openai";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Message.create({ ...body, author: user })
+    .then(async (message) => {
+      if (body.to && _.includes(["6463b56b2f752e93d06cf8a6"], body.to)) {
+        const reply_content = await getAnswer(message.content);
+        console.log(reply_content)
+        if (reply_content) {
+          await Message.create({
+            author: "6463b56b2f752e93d06cf8a6",
+            content: reply_content,
+            reply_to: [message.id],
+            project: message.project,
+          });
+        }
+      }
+      return message
+    })
     .then((message) => message.view(true))
     .then(success(res, 201))
     .catch(next);

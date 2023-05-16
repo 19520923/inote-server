@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Message, { schema } from "./model";
 
 const router = new Router();
-const { project, reply_to, content, deleted_flag, type, image } = schema.tree;
+const { project, reply_to, content, deleted_flag, image, to } = schema.tree;
 
 const schema_q = new Schema({
   project: {
@@ -35,7 +35,7 @@ const schema_q = new Schema({
 router.post(
   "/",
   token({ required: true }),
-  body({ project, reply_to, content, type, image }),
+  body({ project, reply_to, content, image, to }),
   create
 );
 
@@ -72,7 +72,7 @@ router.get("/", token({ required: true }), query(schema_q), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ reply_to, content, deleted_flag, type }),
+  body({ reply_to, content, deleted_flag, to }),
   update
 );
 

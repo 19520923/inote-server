@@ -21,7 +21,7 @@ const messageSchema = new Schema(
     reply_to: [
       {
         type: Schema.ObjectId,
-        ref: "User",
+        ref: "Message",
       },
     ],
     content: {
@@ -31,11 +31,12 @@ const messageSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    type: {
-      type: String,
-      enum: MESSAGE_TYPE,
-      default: "text",
-    },
+    to: [
+      {
+        type: Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -58,7 +59,7 @@ messageSchema.post(/^save/, async function (child) {
     if (!child.populated("author reply_to")) {
       await child
         .populate({
-          path: "author reply_to",
+          path: "author reply_to to",
           options: { _recursed: true },
         })
         .execPopulate();
@@ -76,19 +77,19 @@ messageSchema.methods = {
       // simple view
       id: this.id,
       author: this.author.view(),
-      project: this.project,
-      reply_to: this.reply_to.map((e) => e.view()),
-      content: this.content,
       deleted_flag: this.deleted_flag,
-      type: this.type,
-      created_at: this.created_at,
-      updated_at: this.updated_at,
-      image: this.image,
     };
 
     return full
       ? {
           ...view,
+          project: this.project,
+          reply_to: this.reply_to.map((e) => e.view()),
+          content: this.content,
+          created_at: this.created_at,
+          updated_at: this.updated_at,
+          image: this.image,
+          to: this.to.map((e) => e.view()),
           // add properties for a full view
         }
       : view;
