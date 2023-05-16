@@ -45,7 +45,7 @@ const taskSchema = new Schema(
     priority: {
       type: String,
       enum: TASK_PRIORITY,
-      default: TASK_STATUS[0],
+      default: TASK_PRIORITY[0],
     },
     milestone: {
       type: Schema.ObjectId,

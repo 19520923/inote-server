@@ -2,7 +2,7 @@ import { Router } from "express";
 import { middleware as query, Schema } from "querymen";
 import { middleware as body } from "bodymen";
 import { token } from "../../services/passport";
-import { create, index, show, update, destroy } from "./controller";
+import { create, index, show, update, destroy, report } from "./controller";
 import { schema } from "./model";
 export Task, { schema } from "./model";
 
@@ -43,6 +43,24 @@ const schema_q = new Schema({
   before: {
     type: Date,
     paths: ["due_date"],
+    operator: "$lte",
+  },
+});
+
+const report_schema = new Schema({
+  project: {
+    type: String,
+    required: true,
+  },
+  assignee: String,
+  after: {
+    type: Date,
+    paths: ["due_date", "start_date"],
+    operator: "$gte",
+  },
+  before: {
+    type: Date,
+    paths: ["due_date", "start_date"],
     operator: "$lte",
   },
 });
@@ -185,5 +203,12 @@ router.put(
  * @apiError 401 user access only.
  */
 router.delete("/:id", token({ required: true }), destroy);
+
+router.get(
+  "/report/overview",
+  token({ required: true }),
+  query(report_schema),
+  report
+);
 
 export default router;

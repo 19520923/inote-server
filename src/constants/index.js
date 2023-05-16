@@ -12,12 +12,12 @@ export const PROJECT_STATUS = [
 ];
 export const TASK_STATUS = [
   "open",
-  "in progress",
+  "in_progress",
   "pending",
   "resolved",
   "closed",
 ];
-export const TASK_PRIORITY = ["low", "medium", "high", "important"];
+export const TASK_PRIORITY = ["low", "normal", "high", "important"];
 export const REMINDER_REPEAT = ["none", "daily", "monthly", "annual"];
 export const MESSAGE_TYPE = ["text", "image", "quote", "video"];
 export const NOTE_TYPE = ["text", "draw"];

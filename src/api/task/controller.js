@@ -94,9 +94,75 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(success(res))
     .catch(next);
 
-export const destroy = ({ user, params }, res, next) =>
+export const destroy = ({ params }, res, next) =>
   Task.findById(params.id)
     .then(notFound(res))
     .then((task) => (task ? task.remove() : null))
     .then(success(res, 204))
+    .catch(next);
+
+export const report = ({ querymen: { query } }, res, next) =>
+  Task.count({ ...query, deleted_flag: false })
+    .then(async (count) => {
+      const low = await Task.count({
+        ...query,
+        deleted_flag: false,
+        priority: "low",
+      });
+      const normal = await Task.count({
+        ...query,
+        deleted_flag: false,
+        priority: "normal",
+      });
+      const high = await Task.count({
+        ...query,
+        deleted_flag: false,
+        priority: "high",
+      });
+      const important = await Task.count({
+        ...query,
+        deleted_flag: false,
+        priority: "important",
+      });
+
+      const open = await Task.count({
+        ...query,
+        deleted_flag: false,
+        status: "open",
+      });
+      const in_progress = await Task.count({
+        ...query,
+        deleted_flag: false,
+        status: "in_progress",
+      });
+      const resolved = await Task.count({
+        ...query,
+        deleted_flag: false,
+        status: "resolved",
+      });
+      const closed = await Task.count({
+        ...query,
+        deleted_flag: false,
+        status: "closed",
+      });
+      const pending = await Task.count({
+        ...query,
+        deleted_flag: false,
+        status: "pending",
+      });
+
+      return {
+        total: count,
+        low: low,
+        normal: normal,
+        high: high,
+        important: important,
+        open: open,
+        in_progress: in_progress,
+        resolved: resolved,
+        closed: closed,
+        pending: pending,
+      };
+    })
+    .then(success(res))
     .catch(next);
