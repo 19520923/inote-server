@@ -6,9 +6,9 @@ import { getAnswer } from "../../services/openai";
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Message.create({ ...body, author: user })
     .then(async (message) => {
-      if (body.to && _.includes(["6463b56b2f752e93d06cf8a6"], body.to)) {
+      if (body.to && _.includes(body.to, "6463b56b2f752e93d06cf8a6")) {
         const reply_content = await getAnswer(message.content);
-        console.log(reply_content)
+        console.log(reply_content);
         if (reply_content) {
           await Message.create({
             author: "6463b56b2f752e93d06cf8a6",
@@ -30,7 +30,7 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
       Message.find({ ...query, deleted_flag: false }, select, cursor).then(
         (messages) => ({
           count,
-          rows: messages.map((message) => message.view()),
+          rows: messages.map((message) => message.view(true)),
         })
       )
     )

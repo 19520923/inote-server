@@ -33,7 +33,6 @@ const projectSchema = new Schema(
       {
         type: Schema.ObjectId,
         ref: "User",
-        default: ["6463b56b2f752e93d06cf8a6"],
       },
     ],
     deleted_flag: {

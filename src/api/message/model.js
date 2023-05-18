@@ -18,12 +18,10 @@ const messageSchema = new Schema(
       type: String,
       default: "",
     },
-    reply_to: [
-      {
-        type: Schema.ObjectId,
-        ref: "Message",
-      },
-    ],
+    reply_to: {
+      type: Schema.ObjectId,
+      ref: "Message",
+    },
     content: {
       type: String,
     },
@@ -77,6 +75,7 @@ messageSchema.methods = {
       // simple view
       id: this.id,
       author: this.author.view(),
+      content: this.content,
       deleted_flag: this.deleted_flag,
     };
 
@@ -84,11 +83,10 @@ messageSchema.methods = {
       ? {
           ...view,
           project: this.project,
-          reply_to: this.reply_to.map((e) => e.view()),
-          content: this.content,
           created_at: this.created_at,
           updated_at: this.updated_at,
           image: this.image,
+          reply_to: this.reply_to && this.reply_to.view(),
           to: this.to.map((e) => e.view()),
           // add properties for a full view
         }

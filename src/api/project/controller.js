@@ -4,7 +4,11 @@ import { Notification } from "../notification";
 import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
-  Project.create({ ...body, author: user })
+  Project.create({
+    ...body,
+    members: [...(body.member || []), "6463b56b2f752e93d06cf8a6"],
+    author: user,
+  })
     .then((project) => {
       project.members.forEach(async (member) => {
         await Notification.create({
