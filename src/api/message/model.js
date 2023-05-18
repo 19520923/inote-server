@@ -46,7 +46,7 @@ messageSchema.pre(/^find/, function (next) {
     return next();
   }
   this.populate({
-    path: "author reply_to",
+    path: "author reply_to to",
     options: { _recursed: true },
   });
   next();
@@ -54,7 +54,7 @@ messageSchema.pre(/^find/, function (next) {
 
 messageSchema.post(/^save/, async function (child) {
   try {
-    if (!child.populated("author reply_to")) {
+    if (!child.populated("author reply_to to")) {
       await child
         .populate({
           path: "author reply_to to",
