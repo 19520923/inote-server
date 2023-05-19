@@ -42,12 +42,8 @@ const messageSchema = new Schema(
 );
 
 messageSchema.pre(/^find/, function (next) {
-  // if (this.options._recursed) {
-  //   return next();
-  // }
   this.populate({
     path: "author reply_to to",
-    // options: { _recursed: true },
   });
   next();
 });
@@ -58,7 +54,6 @@ messageSchema.post(/^save/, async function (child) {
       await child
         .populate({
           path: "author reply_to to",
-          // options: { _recursed: true },
         })
         .execPopulate();
     }
@@ -86,7 +81,7 @@ messageSchema.methods = {
           created_at: this.created_at,
           updated_at: this.updated_at,
           image: this.image,
-          reply_to: this.reply_to ? this.reply_to.view() : this.reply_to,
+          reply_to: this.reply_to && this.reply_to.view(),
           to: this.to.map((e) => e.view()),
           // add properties for a full view
         }
