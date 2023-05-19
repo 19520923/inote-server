@@ -86,7 +86,7 @@ messageSchema.methods = {
           created_at: this.created_at,
           updated_at: this.updated_at,
           image: this.image,
-          reply_to: this.reply_to && this.reply_to.view(),
+          reply_to: this.reply_to ? this.reply_to.view() : this.reply_to,
           to: this.to.map((e) => e.view()),
           // add properties for a full view
         }

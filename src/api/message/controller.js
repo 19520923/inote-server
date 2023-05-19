@@ -13,7 +13,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
           await Message.create({
             author: "6463b56b2f752e93d06cf8a6",
             content: reply_content,
-            reply_to: [message.id],
+            reply_to: message.id,
             project: message.project,
           });
         }
