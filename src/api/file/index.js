@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { middleware as query } from "querymen";
+import { middleware as query, Schema } from "querymen";
 import { middleware as body } from "bodymen";
 import { token } from "../../services/passport";
 import { create, index, update } from "./controller";
