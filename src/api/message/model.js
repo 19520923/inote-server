@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { MESSAGE_TYPE } from "../../constants";
 import socket from "../../services/socket";
 import mongooseKeywords from "mongoose-keywords";
 
@@ -35,6 +34,14 @@ const messageSchema = new Schema(
         ref: "User",
       },
     ],
+    is_edited: {
+      type: Boolean,
+      default: false,
+    },
+    is_pinned: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -83,6 +90,8 @@ messageSchema.methods = {
           image: this.image,
           reply_to: this.reply_to && this.reply_to.view(),
           to: this.to.map((e) => e.view()),
+          is_edited: this.is_edited,
+          is_pinned: this.is_pinned,
           // add properties for a full view
         }
       : view;

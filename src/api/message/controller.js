@@ -8,7 +8,6 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
     .then(async (message) => {
       if (body.to && _.includes(body.to, "6463b56b2f752e93d06cf8a6")) {
         const reply_content = await getAnswer(message.content);
-        console.log(reply_content);
         if (reply_content) {
           await Message.create({
             author: "6463b56b2f752e93d06cf8a6",
@@ -18,7 +17,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
           });
         }
       }
-      return message
+      return message;
     })
     .then((message) => message.view(true))
     .then(success(res, 201))
@@ -42,7 +41,12 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(notFound(res))
     .then(authorOrAdmin(res, user, "author"))
     .then((message) =>
-      message ? Object.assign(message, _.pickBy(body, _.identity)).save() : null
+      message
+        ? Object.assign(
+            message,
+            _.pickBy({ ...body, is_edited: true }, _.identity)
+          ).save()
+        : null
     )
     .then((message) => (message ? message.view(true) : null))
     .then(success(res))

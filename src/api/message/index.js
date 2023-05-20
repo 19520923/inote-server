@@ -14,6 +14,7 @@ const schema_q = new Schema({
     type: String,
     required: true,
   },
+  is_pinned: Boolean,
 });
 
 /**
@@ -72,7 +73,7 @@ router.get("/", token({ required: true }), query(schema_q), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ reply_to, content, deleted_flag, to }),
+  body({ reply_to, content, deleted_flag, to, is_pinned }),
   update
 );
 

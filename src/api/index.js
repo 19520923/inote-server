@@ -14,6 +14,7 @@ import reminder from "./reminder";
 import comment from "./comment";
 import message from "./message";
 import verifyCode from "./verify-code";
+import file from './file'
 
 const router = new Router();
 
@@ -55,5 +56,6 @@ router.use("/reminders", reminder);
 router.use("/comments", comment);
 router.use("/messages", message);
 router.use("/verify-code", verifyCode);
+router.use('/files', file)
 
 export default router;
