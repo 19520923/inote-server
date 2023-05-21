@@ -26,7 +26,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(notFound(res))
     .then((milestone) =>
       milestone
-        ? Object.assign(milestone, _.pickBy(body, _.identity)).save()
+        ? Object.assign(milestone, _.omitBy(body, _.isNil)).save()
         : null
     )
     .then((milestone) => (milestone ? milestone.view() : null))

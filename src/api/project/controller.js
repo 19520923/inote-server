@@ -16,7 +16,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
           author: user,
           type: "project",
           receiver: member.id,
-          data: project.id,
+          project: project.id,
         });
       });
       project.hosts.forEach(async (host) => {
@@ -25,7 +25,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
           author: user,
           type: "project",
           receiver: host.id,
-          data: project.id,
+          project: project.id,
         });
       });
       return project;
@@ -80,7 +80,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
       return project;
     })
     .then((project) =>
-      project ? Object.assign(project, _.pickBy(body, _.identity)).save() : null
+      project ? Object.assign(project, _.omitBy(body, _.isNil)).save() : null
     )
     .then((project) => {
       if (project) {
@@ -90,7 +90,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
             author: user,
             type: "project",
             receiver: member,
-            data: project.id,
+            project: project.id,
           });
           project.hosts.forEach(async (host) => {
             await Notification.create({
@@ -98,7 +98,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
               author: user,
               type: "project",
               receiver: host.id,
-              data: project.id,
+              project: project.id,
             });
           });
         });
@@ -137,7 +137,7 @@ export const addMembers = ({ user, params, bodymen: { body } }, res, next) =>
             author: user,
             type: "project",
             receiver: e,
-            data: project.id,
+            project: project.id,
           });
         });
         project.members.push(...notExisted);
@@ -166,7 +166,7 @@ export const removeMembers = ({ user, params, bodymen: { body } }, res, next) =>
             author: user,
             type: "project",
             receiver: e,
-            data: project.id,
+            project: project.id,
           });
         });
         return project.set({ members: newMemberIds }).save();
@@ -198,7 +198,7 @@ export const addHosts = ({ user, params, bodymen: { body } }, res, next) =>
             author: user,
             type: "project",
             receiver: e,
-            data: project.id,
+            project: project.id,
           });
         });
         project.hosts.push(...notExisted);
@@ -227,7 +227,7 @@ export const removeHosts = ({ user, params, bodymen: { body } }, res, next) =>
             author: user,
             type: "project",
             receiver: e,
-            data: project.id,
+            project: project.id,
           });
         });
         const newHostIds = _.difference(hostIds, unique);

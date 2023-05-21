@@ -22,6 +22,9 @@ const notificationSchema = new Schema(
     data: {
       type: String,
     },
+    project: {
+      type: String,
+    },
     receiver: {
       type: Schema.ObjectId,
       ref: "User",
@@ -60,10 +63,11 @@ notificationSchema.methods = {
       // simple view
       id: this.id,
       content: this.content,
-      isSeen: this.isSeen,
+      is_seen: this.is_seen,
       type: this.type,
       author: this.author.view(),
       data: this.data,
+      project: this.project,
       receiver: this.receiver,
       created_at: this.created_at,
     };

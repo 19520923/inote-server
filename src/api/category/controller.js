@@ -52,7 +52,7 @@ export const sync = async ({ user, bodymen: { body } }, res, next) => {
           ? Category.findById(cate.id)
               .then((category) =>
                 category
-                  ? Object.assign(category, _.pickBy(cate, _.identity)).save()
+                  ? Object.assign(category, _.omitBy(cate, _.isNil)).save()
                   : Category.create({ ...cate, author: user })
               )
               .then((category) => category.view())

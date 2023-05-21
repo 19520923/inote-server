@@ -119,6 +119,7 @@ taskSchema.pre(/^save/, async function (next) {
       type: "task",
       receiver: assignee,
       data: this.id,
+      project: this.project,
     });
   }
 });

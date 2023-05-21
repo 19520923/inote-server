@@ -26,7 +26,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(notFound(res))
     .then(authorOrAdmin(res, user, "author"))
     .then((comment) =>
-      comment ? Object.assign(comment, _.pickBy(body, _.identity)).save() : null
+      comment ? Object.assign(comment, _.omitBy(body, _.isNil)).save() : null
     )
     .then((comment) => (comment ? comment.view() : null))
     .then(success(res))

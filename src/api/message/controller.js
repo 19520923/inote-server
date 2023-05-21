@@ -2,15 +2,18 @@ import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Message } from ".";
 import _ from "lodash";
 import { getAnswer } from "../../services/openai";
+import { botId } from "../../config";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Message.create({ ...body, author: user })
     .then(async (message) => {
-      if (body.to && _.includes(body.to, "6463b56b2f752e93d06cf8a6")) {
+      const isReplyToBot = body.reply_to && body.reply_to === botId;
+      const isToBot = body.to && _.includes(body.to, botId);
+      if (isReplyToBot || isToBot) {
         const reply_content = await getAnswer(message.content);
         if (reply_content) {
           await Message.create({
-            author: "6463b56b2f752e93d06cf8a6",
+            author: botId,
             content: reply_content,
             reply_to: message.id,
             project: message.project,
@@ -39,12 +42,17 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
 export const update = ({ user, bodymen: { body }, params }, res, next) =>
   Message.findById(params.id)
     .then(notFound(res))
-    .then(authorOrAdmin(res, user, "author"))
+    .then((message) =>
+      body.is_pinned ? message : authorOrAdmin(res, user, "author")
+    )
     .then((message) =>
       message
         ? Object.assign(
             message,
-            _.pickBy({ ...body, is_edited: true }, _.identity)
+            _.omitBy(
+              { ...body, is_edited: !message.is_edited && body.is_pinned },
+              _.isNil
+            )
           ).save()
         : null
     )

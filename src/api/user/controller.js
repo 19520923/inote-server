@@ -74,7 +74,7 @@ export const update = ({ bodymen: { body }, params, user }, res, next) =>
       return result;
     })
     .then((user) =>
-      user ? Object.assign(user, _.pickBy(body, _.identity)).save() : null
+      user ? Object.assign(user, _.omitBy(body, _.isNil)).save() : null
     )
     .then((user) => (user ? user.view(true) : null))
     .then(success(res))

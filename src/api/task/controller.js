@@ -56,7 +56,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(async (task) => {
       if (!task) return null;
       const oldTask = _.cloneDeep(task);
-      const newTask = Object.assign(task, _.pickBy(body, _.identity));
+      const newTask = Object.assign(task, _.omitBy(body, _.isNil));
       const changes = task.getChanges().$set;
       await Comment.create({
         author: user,
@@ -75,6 +75,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
             type: "task",
             receiver: task.registered_by.id,
             data: task.id,
+            project: task.project,
           });
         }
         if (task.assignee) {
@@ -84,6 +85,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
             type: "task",
             receiver: task.assignee.id,
             data: task.id,
+            project: task.project,
           });
         }
         return task;

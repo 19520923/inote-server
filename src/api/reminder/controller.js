@@ -29,7 +29,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(authorOrAdmin(res, user, "author"))
     .then((reminder) =>
       reminder
-        ? Object.assign(reminder, _.pickBy(body, _.identity)).save()
+        ? Object.assign(reminder, _.omitBy(body, _.isNil)).save()
         : null
     )
     .then((reminder) => (reminder ? reminder.view() : null))
@@ -51,7 +51,7 @@ export const sync = async ({ user, bodymen: { body } }, res, next) => {
         ? Reminder.findById(r.id)
             .then((reminder) =>
               reminder
-                ? Object.assign(reminder, _.pickBy(r, _.identity)).save()
+                ? Object.assign(reminder, _.omitBy(r, _.isNil)).save()
                 : Reminder.create({ ...r, author: user })
             )
             .then((reminder) => reminder.view(true))

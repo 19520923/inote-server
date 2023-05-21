@@ -35,6 +35,7 @@ const config = {
     password: requireProcessEnv("MAIL_PASSWORD"),
     refreshToken: requireProcessEnv("OAUTH_REFRESH_TOKEN"),
     openai: requireProcessEnv("OPENAI_SECRET_KEY"),
+    botId: requireProcessEnv("BOT_ID"),
 
     mongo: {
       options: {
