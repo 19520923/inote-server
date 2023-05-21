@@ -42,15 +42,18 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
 export const update = ({ user, bodymen: { body }, params }, res, next) =>
   Message.findById(params.id)
     .then(notFound(res))
-    .then((message) =>
-      body.is_pinned ? message : authorOrAdmin(res, user, "author")
-    )
+    .then(authorOrAdmin(res, user, "author"))
     .then((message) =>
       message
         ? Object.assign(
             message,
             _.omitBy(
-              { ...body, is_edited: !message.is_edited && body.is_pinned },
+              {
+                ...body,
+                ...(!body.is_pinned
+                  ? { is_edited: true, is_pinned: undefined }
+                  : { is_pinned: body.is_pinned }),
+              },
               _.isNil
             )
           ).save()
