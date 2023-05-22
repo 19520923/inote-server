@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Message, { schema } from "./model";
 
 const router = new Router();
-const { project, reply_to, content, deleted_flag, image, to, is_pinned } = schema.tree;
+const { project, reply_to, content, deleted_flag, image, to, is_pinned, is_edited } = schema.tree;
 
 const schema_q = new Schema({
   project: {
@@ -73,7 +73,7 @@ router.get("/", token({ required: true }), query(schema_q), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ reply_to, content, deleted_flag, to, is_pinned }),
+  body({ reply_to, content, deleted_flag, to, is_pinned, is_edited }),
   update
 );
 
