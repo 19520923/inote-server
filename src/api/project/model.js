@@ -99,6 +99,7 @@ projectSchema.methods = {
       hosts: this.hosts.map((host) => host.view()),
       created_at: this.created_at,
       updated_at: this.updated_at,
+      author: this.author.view(),
     };
 
     return full
@@ -107,7 +108,6 @@ projectSchema.methods = {
           acronym: this.acronym,
           sprintlength: this.sprintlength,
           description: this.description,
-          author: this.author.view(),
           wiki: this.wiki,
         }
       : view;
