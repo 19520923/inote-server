@@ -36,11 +36,9 @@ const messageSchema = new Schema(
     ],
     is_edited: {
       type: Boolean,
-      default: false,
     },
     is_pinned: {
       type: Boolean,
-      default: false,
     },
   },
   {
