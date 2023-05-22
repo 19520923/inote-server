@@ -1,12 +1,13 @@
 import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Project } from ".";
 import { Notification } from "../notification";
+import { botId } from "../../config";
 import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Project.create({
     ...body,
-    members: [...(body.member || []), "6463b56b2f752e93d06cf8a6"],
+    members: [...(body.members || []), botId],
     author: user,
   })
     .then((project) => {

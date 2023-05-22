@@ -2,17 +2,20 @@ import { success, notFound } from "../../services/response/";
 import { User } from ".";
 import { VerifyCode } from "../verify-code";
 import { sendMail } from "../../services/nodemailer";
+import { botId } from "../../config";
 import _ from "lodash";
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  User.count({ ...query, deleted_flag: false })
+  User.count({ ...query, deleted_flag: false, _id: { $ne: botId } })
     .then((count) =>
-      User.find({ ...query, deleted_flag: false }, select, cursor).then(
-        (users) => ({
-          rows: users.map((user) => user.view()),
-          count,
-        })
-      )
+      User.find(
+        { ...query, deleted_flag: false, _id: { $ne: botId } },
+        select,
+        cursor
+      ).then((users) => ({
+        rows: users.map((user) => user.view()),
+        count,
+      }))
     )
     .then(success(res))
     .catch(next);
