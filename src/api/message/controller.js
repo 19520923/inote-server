@@ -39,25 +39,11 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     .then(success(res))
     .catch(next);
 
-export const update = ({ user, bodymen: { body }, params }, res, next) =>
+export const update = ({ bodymen: { body }, params }, res, next) =>
   Message.findById(params.id)
     .then(notFound(res))
-    .then(authorOrAdmin(res, user, "author"))
     .then((message) =>
-      message
-        ? Object.assign(
-            message,
-            _.omitBy(
-              {
-                ...body,
-                ...(!body.is_pinned
-                  ? { is_edited: true, is_pinned: undefined }
-                  : { is_pinned: body.is_pinned }),
-              },
-              _.isNil
-            )
-          ).save()
-        : null
+      message ? Object.assign(message, _.omitBy(body, _.isNil)).save() : null
     )
     .then((message) => (message ? message.view(true) : null))
     .then(success(res))
