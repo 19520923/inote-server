@@ -108,7 +108,7 @@ projectSchema.methods = {
           acronym: this.acronym,
           sprintlength: this.sprintlength,
           description: this.description,
-          wiki: this.wiki,
+          wikis: this.wikis,
         }
       : view;
   },
