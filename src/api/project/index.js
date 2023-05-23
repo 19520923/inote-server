@@ -124,6 +124,8 @@ router.put(
     description,
     deleted_flag,
     wikis,
+    members,
+    hosts,
   }),
   update
 );

@@ -46,7 +46,7 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
 export const show = ({ params }, res, next) =>
   Task.findById(params.id)
     .then(notFound(res))
-    .then((task) => (task ? task.view() : null))
+    .then((task) => (task ? task.view(true) : null))
     .then(success(res))
     .catch(next);
 

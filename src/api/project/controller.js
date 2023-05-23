@@ -74,7 +74,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(notFound(res))
     .then((project) => {
       const hostIndex = project.hosts.findIndex((host) => host.id === user.id);
-      if (hostIndex !== -1 && project.author.id !== user.id) {
+      if (hostIndex === -1 && project.author.id !== user.id) {
         res.status(403).json("Don't have permission").end();
         return null;
       }
