@@ -34,6 +34,7 @@ const {
   is_first_login,
   deleted_flag,
   username,
+  firebase_token,
 } = schema.tree;
 
 /**
@@ -114,6 +115,7 @@ router.put(
     date_of_birth,
     is_first_login,
     username,
+    firebase_token,
   }),
   update
 );

@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { NOTIFICATION_TYPES } from "../../constants";
 import socket from "../../services/socket";
+import { sendToUser } from "../../utils/notification";
 
 const notificationSchema = new Schema(
   {
@@ -53,7 +54,9 @@ notificationSchema.pre(/^find/, function (next) {
 
 notificationSchema.post(/^save/, async function (child) {
   try {
-    socket.to("notification:create", child.receiver.toString(), child.view());
+    const user = child.receiver.toString();
+    socket.to("notification:create", user, child.view());
+    await sendToUser(user);
   } catch (err) {}
 });
 

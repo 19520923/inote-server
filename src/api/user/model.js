@@ -73,6 +73,9 @@ const userSchema = new Schema(
       enum: USER_ROLES,
       default: "user",
     },
+    firebase_token: {
+      type: String,
+    },
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

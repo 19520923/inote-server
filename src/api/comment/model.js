@@ -24,6 +24,16 @@ const commentSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    reply_to: {
+      type: Schema.ObjectId,
+      ref: "Comment",
+    },
+    to: [
+      {
+        type: Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -35,7 +45,7 @@ commentSchema.pre(/^find/, function (next) {
     return next();
   }
   this.populate({
-    path: "author",
+    path: "author reply_to to",
     options: { _recursed: true },
   });
   next();
@@ -44,10 +54,10 @@ commentSchema.pre(/^find/, function (next) {
 commentSchema.post(/^save/, async function (child) {
   try {
     const task = await Task.findById(child.task);
-    if (!child.populated("author")) {
+    if (!child.populated("author reply_to to")) {
       await child
         .populate({
-          path: "author",
+          path: "author reply_to to",
           options: { _recursed: true },
         })
         .execPopulate();
@@ -70,6 +80,8 @@ commentSchema.methods = {
       is_system: this.is_system,
       created_at: this.created_at,
       updated_at: this.updated_at,
+      reply_to: this.reply_to && this.reply_to.view(),
+      to: this.to && this.to.map((user) => user.view()),
     };
   },
 };
