@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const milestoneSchema = new Schema(
+const activitySchema = new Schema(
   {
     author: {
       type: Schema.ObjectId,
@@ -10,17 +10,12 @@ const milestoneSchema = new Schema(
     name: {
       type: String,
     },
-    project: {
-      type: Schema.ObjectId,
-      ref: "Project",
-      required: true,
-    },
-    deleted_flag: {
-      type: Boolean,
-      default: false,
-    },
     order: {
       type: Number,
+    },
+    delete_flag: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -28,19 +23,24 @@ const milestoneSchema = new Schema(
   }
 );
 
-milestoneSchema.methods = {
+activitySchema.methods = {
   view() {
     return {
       // simple view
       id: this.id,
+      author: this.author.view(full),
       name: this.name,
       order: this.order,
-      project: this.project,
+      delete_flag: this.delete_flag,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
+
+    
   },
 };
 
-const model = mongoose.model("Milestone", milestoneSchema);
+const model = mongoose.model("Activity", activitySchema);
 
 export const schema = model.schema;
 export default model;

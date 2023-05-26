@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Milestone, { schema } from "./model";
 
 const router = new Router();
-const { title, project, deleted_flag } = schema.tree;
+const { name, project, deleted_flag, order } = schema.tree;
 
 const schema_q = new Schema({
   project: {
@@ -22,7 +22,7 @@ const schema_q = new Schema({
  * @apiGroup Milestone
  * @apiPermission user
  * @apiParam {String} access_token user access token.
- * @apiParam title Milestone's title.
+ * @apiParam name Milestone's name.
  * @apiParam project Milestone's project.
  * @apiParam deleted_flag Milestone's deleted_flag.
  * @apiSuccess {Object} milestone Milestone's data.
@@ -33,7 +33,7 @@ const schema_q = new Schema({
 router.post(
   "/",
   token({ required: true }),
-  body({ title, project, deleted_flag }),
+  body({ name, project, deleted_flag, order }),
   create
 );
 
@@ -57,7 +57,7 @@ router.get("/", token({ required: true }), query(schema_q), index);
  * @apiGroup Milestone
  * @apiPermission user
  * @apiParam {String} access_token user access token.
- * @apiParam title Milestone's title.
+ * @apiParam name Milestone's name.
  * @apiParam project Milestone's project.
  * @apiParam deleted_flag Milestone's deleted_flag.
  * @apiSuccess {Object} milestone Milestone's data.
@@ -68,7 +68,7 @@ router.get("/", token({ required: true }), query(schema_q), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ title, deleted_flag }),
+  body({ name, deleted_flag, order }),
   update
 );
 

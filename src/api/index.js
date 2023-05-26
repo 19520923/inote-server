@@ -15,6 +15,7 @@ import comment from "./comment";
 import message from "./message";
 import verifyCode from "./verify-code";
 import file from './file'
+import activity from './activity'
 
 const router = new Router();
 
@@ -57,5 +58,6 @@ router.use("/comments", comment);
 router.use("/messages", message);
 router.use("/verify-code", verifyCode);
 router.use('/files', file)
+router.use('/activities', activity)
 
 export default router;
