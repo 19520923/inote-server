@@ -57,7 +57,7 @@ commentSchema.post(/^save/, async function (child) {
         })
         .execPopulate();
     }
-    socket.to("comment:update", task.project.toString(), child.view());
+    socket.to("comment:update", task.project.toString(), child.view(true));
   } catch (err) {
     console.log(err);
   }
