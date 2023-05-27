@@ -59,13 +59,14 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
       const oldTask = _.cloneDeep(task);
       const newTask = Object.assign(task, _.omitBy(body, _.isNil));
       const changes = task.getChanges().$set;
+      const savedTask = await newTask.save();
       await Comment.create({
         author: user,
         task: task.id,
-        content: getChangesContent(oldTask, newTask, changes),
+        content: getChangesContent(oldTask, savedTask, changes),
         is_system: true,
       });
-      return newTask.save();
+      return savedTask;
     })
     .then(async (task) => {
       if (task) {
