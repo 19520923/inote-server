@@ -62,12 +62,11 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
       await Comment.create({
         author: user,
         task: task.id,
-        content: getChangesContent(oldTask, changes),
+        content: getChangesContent(oldTask, newTask, changes),
         is_system: true,
       });
       return newTask.save();
     })
-    // .then((task) => (task ? Object.assign(task, body).save() : null))
     .then(async (task) => {
       if (task) {
         if (user.id !== task.registered_by.id) {

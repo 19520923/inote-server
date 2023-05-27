@@ -41,12 +41,8 @@ const commentSchema = new Schema(
 );
 
 commentSchema.pre(/^find/, function (next) {
-  if (this.options._recursed) {
-    return next();
-  }
   this.populate({
     path: "author reply_to to",
-    options: { _recursed: true },
   });
   next();
 });
@@ -58,7 +54,6 @@ commentSchema.post(/^save/, async function (child) {
       await child
         .populate({
           path: "author reply_to to",
-          options: { _recursed: true },
         })
         .execPopulate();
     }
@@ -69,20 +64,26 @@ commentSchema.post(/^save/, async function (child) {
 });
 
 commentSchema.methods = {
-  view() {
-    return {
+  view(full) {
+    const view = {
       // simple view
       id: this.id,
       author: this.author.view(),
       content: this.content,
-      task: this.task,
       deleted_flag: this.deleted_flag,
-      is_system: this.is_system,
-      created_at: this.created_at,
-      updated_at: this.updated_at,
-      reply_to: this.reply_to && this.reply_to.view(),
-      to: this.to && this.to.map((user) => user.view()),
     };
+
+    return full
+      ? {
+          ...view,
+          task: this.task,
+          is_system: this.is_system,
+          created_at: this.created_at,
+          updated_at: this.updated_at,
+          reply_to: this.reply_to && this.reply_to.view(),
+          to: this.to && this.to.map((user) => user.view()),
+        }
+      : view;
   },
 };
 

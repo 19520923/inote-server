@@ -4,7 +4,7 @@ import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Comment.create({ ...body, author: user })
-    .then((comment) => comment.view())
+    .then((comment) => comment.view(true))
     .then(success(res, 201))
     .catch(next);
 
@@ -14,7 +14,7 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
       Comment.find({ ...query, deleted_flag: false }, select, cursor).then(
         (comments) => ({
           count,
-          rows: comments.map((comment) => comment.view()),
+          rows: comments.map((comment) => comment.view(true)),
         })
       )
     )
@@ -28,7 +28,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then((comment) =>
       comment ? Object.assign(comment, _.omitBy(body, _.isNil)).save() : null
     )
-    .then((comment) => (comment ? comment.view() : null))
+    .then((comment) => (comment ? comment.view(true) : null))
     .then(success(res))
     .catch(next);
 
