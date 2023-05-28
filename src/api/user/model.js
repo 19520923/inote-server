@@ -110,33 +110,56 @@ userSchema.pre("save", function (next) {
     .catch(next);
 });
 
+userSchema.pre(/^find/, function (next) {
+  if (this.options._recursed) {
+    return next();
+  }
+  this.populate({
+    path: "job",
+    options: { _recursed: true },
+  });
+  next();
+});
+
+userSchema.post(/^save/, async function (child) {
+  try {
+    if (!child.populated("job")) {
+      await child
+        .populate({
+          path: "job",
+          options: { _recursed: true },
+        })
+        .execPopulate();
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 userSchema.methods = {
   view(full) {
-    const view = {};
-    let fields = ["id", "fullname", "avatar", "username"];
+    const view = {
+      id: this.id,
+      fullname: this.fullname,
+      avatar: this.avatar,
+      username: this.username,
+    };
 
-    if (full) {
-      fields = [
-        ...fields,
-        "email",
-        "phone",
-        "created_at",
-        "updated_at",
-        "date_of_birth",
-        "about",
-        "job",
-        "is_first_login",
-        "deleted_flag",
-        "interests",
-        "gender",
-      ];
-    }
-
-    fields.forEach((field) => {
-      view[field] = this[field];
-    });
-
-    return view;
+    return full
+      ? {
+          ...view,
+          email: this.email,
+          created_at: this.created_at,
+          updated_at: this.updated_at,
+          date_of_birth: this.date_of_birth,
+          about: this.about,
+          job: this.job && this.job.name,
+          is_first_login: this.is_first_login,
+          deleted_flag: this.deleted_flag,
+          interests: this.interests,
+          gender: this.gender,
+        }
+      : view;
   },
 
   authenticate(password) {

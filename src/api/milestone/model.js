@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import socket from "../../services/socket";
 
 const milestoneSchema = new Schema(
   {
@@ -28,6 +29,14 @@ const milestoneSchema = new Schema(
   }
 );
 
+milestoneSchema.post(/^save/, async function (child) {
+  try {
+    socket.to("milestone:update", child.project.toString(), child.view());
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 milestoneSchema.methods = {
   view() {
     return {
@@ -36,6 +45,8 @@ milestoneSchema.methods = {
       name: this.name,
       order: this.order,
       project: this.project,
+      created_at: this.created_at,
+      updated_at: this.updated_at,
     };
   },
 };

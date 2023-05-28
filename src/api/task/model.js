@@ -80,6 +80,10 @@ const taskSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    activity: {
+      type: Schema.ObjectId,
+      ref: "Activity",
+    },
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -104,7 +108,7 @@ taskSchema.pre(/^find/, function (next) {
     return next();
   }
   this.populate({
-    path: "registered_by assignee milestone children",
+    path: "registered_by assignee milestone children activity",
     options: { _recursed: true },
   });
   next();
@@ -112,12 +116,12 @@ taskSchema.pre(/^find/, function (next) {
 
 taskSchema.pre(/^save/, async function (next) {
   const changes = this.getChanges().$set;
-  if (_.includes(["assignee"], changes)) {
+  if (_.includes(Object.keys(changes), "assignee")) {
     await Notification.create({
       content: `${this.subject} (${this.key}) has been assigned to you`,
       author: this.registered_by,
       type: "task",
-      receiver: assignee,
+      receiver: change["assignee"],
       data: this.id,
       project: this.project,
     });
@@ -126,10 +130,10 @@ taskSchema.pre(/^save/, async function (next) {
 
 taskSchema.post(/^save/, async function (child) {
   try {
-    if (!child.populated("registered_by assignee milestone")) {
+    if (!child.populated("registered_by assignee milestone activity")) {
       await child
         .populate({
-          path: "registered_by assignee milestone",
+          path: "registered_by assignee milestone activity",
           options: { _recursed: true },
         })
         .execPopulate();
@@ -151,10 +155,10 @@ taskSchema.methods = {
       registered_by: this.registered_by
         ? this.registered_by.view()
         : this.registered_by,
-      assignee: this.assignee ? this.assignee.view() : this.assignee,
+      assignee: this.assignee && this.assignee.view(),
       is_remind: this.is_remind,
       due_date: this.due_date,
-      milestone: this.milestone ? this.milestone.view() : this.milestone,
+      milestone: this.milestone && this.milestone.view(),
       project: this.project,
     };
 
@@ -173,6 +177,7 @@ taskSchema.methods = {
             ? this.children.map((child) => child.view())
             : this.children,
           parent: this.parent,
+          activity: this.activity && this.activity.view(),
         }
       : view;
   },

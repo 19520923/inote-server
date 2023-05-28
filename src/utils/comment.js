@@ -7,24 +7,24 @@ export const getChangesContent = (task, newTask, changes) => {
     switch (e) {
       case "start_date":
       case "due_date":
-        return `${_.capitalize(_.lowerCase(e))}: ${moment(task[e]).format(
+        return `◉ ${_.capitalize(_.lowerCase(e))}: ${moment(task[e]).format(
           DATE_FORMAT
         )} → ${moment(newTask[e]).format(DATE_FORMAT)}`;
 
       case "content":
-        return "Content: Content changed";
+        return "◉ Content: Content changed";
 
       case "priority":
       case "status":
       case "actual":
       case "estimate":
-        return `${_.capitalize(_.lowerCase(e))}: ${_.capitalize(
+        return `◉ ${_.capitalize(_.lowerCase(e))}: ${_.capitalize(
           _.lowerCase(task[e])
         )} → ${_.capitalize(_.lowerCase(newTask[e]))}`;
 
       case "assignee":
         if (task[e].id !== newTask[e].id) {
-          return `${_.capitalize(_.lowerCase(e))}: ${task[e].username} → ${
+          return `◉ ${_.capitalize(_.lowerCase(e))}: ${task[e].username} → ${
             newTask[e].username
           }`;
         }
