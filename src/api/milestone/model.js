@@ -45,6 +45,7 @@ milestoneSchema.methods = {
       name: this.name,
       order: this.order,
       project: this.project,
+      deleted_flag: this.deleted_flag,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };
