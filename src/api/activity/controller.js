@@ -1,5 +1,6 @@
 import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Activity } from ".";
+import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Activity.create({ ...body, author: user })
@@ -22,11 +23,9 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
 
 export const update = ({ user, bodymen: { body }, params }, res, next) =>
   Activity.findById(params.id)
-    .populate("author")
     .then(notFound(res))
-    .then(authorOrAdmin(res, user, "author"))
     .then((activity) =>
-      activity ? Object.assign(activity, body).save() : null
+      activity ? Object.assign(activity, _.omitBy(body, _.isNil)).save() : null
     )
     .then((activity) => (activity ? activity.view() : null))
     .then(success(res))

@@ -31,7 +31,7 @@ const schema_q = new Schema({
  */
 router.post('/',
   token({ required: true }),
-  body({ name, order, delete_flag, project }),
+  body({ name, order, project }),
   create)
 
 /**
