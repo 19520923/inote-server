@@ -55,6 +55,12 @@ const projectSchema = new Schema(
         content: String,
       },
     ],
+    activities: [
+      {
+        type: Schema.ObjectId,
+        ref: "Activity",
+      },
+    ],
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -109,6 +115,7 @@ projectSchema.methods = {
           sprintlength: this.sprintlength,
           description: this.description,
           wikis: this.wikis,
+          activities: this.activities.map((activity) => activity.view()),
         }
       : view;
   },
