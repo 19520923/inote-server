@@ -7,7 +7,7 @@ import { schema } from './model'
 export Activity, { schema } from './model'
 
 const router = new Router()
-const { name, order, delete_flag, project } = schema.tree
+const { name, order, deleted_flag, project } = schema.tree
 const schema_q = new Schema({
   project: {
     type: String,
@@ -67,7 +67,7 @@ router.get('/',
  */
 router.put('/:id',
   token({ required: true }),
-  body({ name, order, delete_flag }),
+  body({ name, order, deleted_flag }),
   update)
 
 /**

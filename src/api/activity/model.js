@@ -18,7 +18,7 @@ const activitySchema = new Schema(
     order: {
       type: Number,
     },
-    delete_flag: {
+    deleted_flag: {
       type: Boolean,
       default: false,
     },
@@ -44,7 +44,7 @@ activitySchema.methods = {
       name: this.name,
       project: this.project,
       order: this.order,
-      delete_flag: this.delete_flag,
+      deleted_flag: this.deleted_flag,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };
