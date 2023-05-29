@@ -24,6 +24,7 @@ const {
   opened_at,
   deleted_flag,
   is_remind,
+  activity,
 } = schema.tree;
 
 const schema_q = new Schema({
@@ -35,6 +36,7 @@ const schema_q = new Schema({
   is_remind: Boolean,
   status: String,
   milestone: String,
+  activity: String,
   after: {
     type: Date,
     paths: ["due_date"],
@@ -110,6 +112,7 @@ router.post(
     due_date,
     end_date,
     is_remind,
+    activity,
   }),
   create
 );
@@ -188,6 +191,7 @@ router.put(
     opened_at,
     deleted_flag,
     is_remind,
+    activity,
   }),
   update
 );

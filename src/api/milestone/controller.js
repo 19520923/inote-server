@@ -21,7 +21,7 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     .then(success(res))
     .catch(next);
 
-export const update = ({ user, bodymen: { body }, params }, res, next) =>
+export const update = ({ bodymen: { body }, params }, res, next) =>
   Milestone.findById(params.id)
     .then(notFound(res))
     .then((milestone) =>
