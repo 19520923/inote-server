@@ -116,12 +116,16 @@ taskSchema.pre(/^find/, function (next) {
 
 taskSchema.pre(/^save/, async function (next) {
   const changes = this.getChanges().$set;
-  if (_.includes(Object.keys(changes), "assignee")) {
+  if (
+    _.includes(Object.keys(changes), "assignee") &&
+    changes["assignee"] !== this.assignee.id
+  ) {
+    console.log("changes assignee");
     await Notification.create({
       content: `${this.subject} (${this.key}) has been assigned to you`,
       author: this.registered_by,
       type: "task",
-      receiver: change["assignee"],
+      receiver: changes["assignee"],
       data: this.id,
       project: this.project,
     });

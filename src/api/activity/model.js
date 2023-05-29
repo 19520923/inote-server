@@ -8,6 +8,10 @@ const activitySchema = new Schema(
       ref: "User",
       required: true,
     },
+    project: {
+      type: Schema.ObjectId,
+      ref: "Project",
+    },
     name: {
       type: String,
     },
@@ -38,13 +42,12 @@ activitySchema.methods = {
       // simple view
       id: this.id,
       name: this.name,
+      project: this.project,
       order: this.order,
       delete_flag: this.delete_flag,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };
-
-    
   },
 };
 
