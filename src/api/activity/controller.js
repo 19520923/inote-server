@@ -8,9 +8,9 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
     .catch(next);
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  Activity.count({ ...query, delete_flag: true })
+  Activity.count({ ...query, delete_flag: false })
     .then((count) =>
-      Activity.find({ ...query, delete_flag: true }, select, cursor)
+      Activity.find({ ...query, delete_flag: false }, select, cursor)
         .populate("author")
         .then((activities) => ({
           count,
