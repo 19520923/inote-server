@@ -13,10 +13,7 @@ const messageSchema = new Schema(
       type: Schema.ObjectId,
       ref: "Project",
     },
-    image: {
-      type: String,
-      default: "",
-    },
+    images: [String],
     reply_to: {
       type: Schema.ObjectId,
       ref: "Message",
@@ -85,7 +82,7 @@ messageSchema.methods = {
           project: this.project,
           created_at: this.created_at,
           updated_at: this.updated_at,
-          image: this.image,
+          images: this.images,
           reply_to: this.reply_to && this.reply_to.view(),
           to: this.to.map((e) => e.view()),
           is_edited: this.is_edited,

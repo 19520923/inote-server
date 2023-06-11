@@ -28,6 +28,12 @@ export const getChangesContent = (task, newTask, changes) => {
             newTask[e].username
           }`;
         }
+
+      case "milestone":
+      case "activity":
+        return `◉ ${_.capitalize(_.lowerCase(e))}: ${_.capitalize(
+          _.lowerCase(task[e].name)
+        )} → ${_.capitalize(_.lowerCase(newTask[e].name))}`;
     }
   });
 
