@@ -164,6 +164,7 @@ taskSchema.methods = {
       due_date: this.due_date,
       milestone: this.milestone && this.milestone.view(),
       project: this.project,
+      activity: this.activity && this.activity.view(),
     };
 
     return full
@@ -181,7 +182,6 @@ taskSchema.methods = {
             ? this.children.map((child) => child.view())
             : this.children,
           parent: this.parent,
-          activity: this.activity && this.activity.view(),
         }
       : view;
   },

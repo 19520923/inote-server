@@ -23,7 +23,7 @@ export const getChangesContent = (task, newTask, changes) => {
         )} → ${_.capitalize(_.lowerCase(newTask[e]))}`;
 
       case "assignee":
-        if (task[e].id !== newTask[e].id) {
+        if (task[e].id && task[e].id !== newTask[e].id) {
           return `◉ ${_.capitalize(_.lowerCase(e))}: ${task[e].username} → ${
             newTask[e].username
           }`;
@@ -31,9 +31,11 @@ export const getChangesContent = (task, newTask, changes) => {
 
       case "milestone":
       case "activity":
-        return `◉ ${_.capitalize(_.lowerCase(e))}: ${_.capitalize(
-          _.lowerCase(task[e].name)
-        )} → ${_.capitalize(_.lowerCase(newTask[e].name))}`;
+        if (task[e].id && task[e].id !== newTask[e].id) {
+          return `◉ ${_.capitalize(_.lowerCase(e))}: ${_.capitalize(
+            _.lowerCase(task[e].name)
+          )} → ${_.capitalize(_.lowerCase(newTask[e].name))}`;
+        }
     }
   });
 
