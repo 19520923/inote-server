@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { middleware as query } from "querymen";
+import { middleware as query, Schema } from "querymen";
 import { middleware as body } from "bodymen";
 import { token } from "../../services/passport";
 import { create, index, update, destroy } from "./controller";
@@ -7,6 +7,13 @@ import { schema } from "./model";
 export TaskReview, { schema } from "./model";
 
 const router = new Router();
+const q_schema = new Schema({
+  project: {
+    type: String,
+    required: true,
+  },
+});
+
 const { point, text } = schema.tree;
 
 /**
@@ -35,7 +42,7 @@ router.post("/", token({ required: true }), body({ point, text }), create);
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 401 user access only.
  */
-router.get("/", token({ required: true }), query(), index);
+router.get("/", token({ required: true }), query(q_schema), index);
 
 /**
  * @api {put} /task_reviews/:id Update task review

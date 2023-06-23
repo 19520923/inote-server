@@ -1,4 +1,3 @@
-import { success, notFound } from "../../services/response/";
 import { AssigneeRecommendation } from ".";
 import { Project } from "../project";
 import _ from "lodash";
@@ -15,7 +14,7 @@ export const index = async (
     for (const member of members) {
       const assignee_points = await AssigneeRecommendation.find({
         user: member,
-        tag: query.tags,
+        tag: query.topics,
       });
       const totalPoint = _.sumBy(assignee_points, (e) => e.avg_point);
       if (totalPoint > 0) {

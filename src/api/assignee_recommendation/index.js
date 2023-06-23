@@ -6,7 +6,7 @@ export AssigneeRecommendation, { schema } from "./model";
 
 const router = new Router();
 const schema = new Schema({
-  tags: [{ type: String, required: true }],
+  topics: [{ type: String, required: true }],
   project: { type: String, required: true },
 });
 /**

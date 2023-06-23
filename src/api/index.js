@@ -61,7 +61,7 @@ router.use("/messages", message);
 router.use("/verify-code", verifyCode);
 router.use('/files', file)
 router.use('/activities', activity)
-router.use('/task_reviews', taskReview)
-router.use('/assignee_recommendations', assigneeRecommendation)
+router.use('/task-reviews', taskReview)
+router.use('/assignee-recommendations', assigneeRecommendation)
 
 export default router;
