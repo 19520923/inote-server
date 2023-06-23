@@ -96,7 +96,7 @@ taskReviewSchema.methods = {
       id: this.id,
       author: this.author.view(),
       project: this.project,
-      task: this.task && this.task.view(full),
+      task: this.task && this.task.view(true),
       point: this.point,
       text: this.text,
       created_at: this.created_at,
