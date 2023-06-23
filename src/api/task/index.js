@@ -25,6 +25,7 @@ const {
   deleted_flag,
   is_remind,
   activity,
+  topics
 } = schema.tree;
 
 const schema_q = new Schema({
@@ -113,6 +114,7 @@ router.post(
     end_date,
     is_remind,
     activity,
+    topics,
   }),
   create
 );
@@ -192,6 +194,7 @@ router.put(
     deleted_flag,
     is_remind,
     activity,
+    topics,
   }),
   update
 );
