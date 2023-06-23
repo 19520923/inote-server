@@ -54,7 +54,7 @@ const report_schema = new Schema({
     type: String,
     required: true,
   },
-  assignee: String,
+  // assignee: String,
   after: {
     type: Date,
     paths: ["due_date", "start_date"],

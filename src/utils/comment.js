@@ -13,6 +13,8 @@ export const getChangesContent = (task, newTask, changes) => {
 
       case "content":
         return "◉ Content: Content changed";
+      case "topics":
+        return "◉ Topics: Topics changed";
 
       case "priority":
       case "status":

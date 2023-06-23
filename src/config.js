@@ -48,7 +48,8 @@ const config = {
   test: {},
   development: {
     mongo: {
-      uri: "mongodb+srv://admin:admin@cluster0.dqfifjx.mongodb.net/?retryWrites=true&w=majority",
+      // uri: "mongodb+srv://admin:admin@cluster0.dqfifjx.mongodb.net/?retryWrites=true&w=majority",
+      uri: "mongodb+srv://19520923:admin@cluster0.4cmmtjt.mongodb.net/?retryWrites=true&w=majority",
       options: {
         debug: true,
       },

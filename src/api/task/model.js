@@ -3,6 +3,9 @@ import { TASK_PRIORITY, TASK_STATUS } from "../../constants";
 import mongooseKeywords from "mongoose-keywords";
 import { Notification } from "../notification";
 import socket from "../../services/socket";
+import { Project } from "../project";
+import { TaskReview } from "../task_review";
+import { AvgTaskReview } from "../avgTaskReview";
 import _ from "lodash";
 
 const taskSchema = new Schema(
@@ -84,6 +87,12 @@ const taskSchema = new Schema(
       type: Schema.ObjectId,
       ref: "Activity",
     },
+    topics: [
+      {
+        type: Schema.ObjectId,
+        ref: "Interest",
+      },
+    ],
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -108,7 +117,7 @@ taskSchema.pre(/^find/, function (next) {
     return next();
   }
   this.populate({
-    path: "registered_by assignee milestone children activity",
+    path: "registered_by assignee milestone children activity topics",
     options: { _recursed: true },
   });
   next();
@@ -116,28 +125,77 @@ taskSchema.pre(/^find/, function (next) {
 
 taskSchema.pre(/^save/, async function (next) {
   const changes = this.getChanges().$set;
-  if (
-    _.includes(Object.keys(changes), "assignee") &&
-    changes["assignee"] !== this.assignee.id
-  ) {
-    console.log("changes assignee");
-    await Notification.create({
-      content: `${this.subject} (${this.key}) has been assigned to you`,
-      author: this.registered_by,
-      type: "task",
-      receiver: changes["assignee"],
-      data: this.id,
+  if (this.assignee) {
+    const taskReview = await TaskReview.findOne({
       project: this.project,
+      task: this.id,
+      user: this.assignee,
     });
+    if (
+      _.includes(Object.keys(changes), "assignee") &&
+      changes["assignee"] !== this.assignee
+    ) {
+      await Notification.create({
+        content: `${this.subject} (${this.key}) has been assigned to you`,
+        author: this.registered_by,
+        type: "task",
+        receiver: changes["assignee"],
+        data: this.id,
+        project: this.project,
+      });
+
+      const avgTaskReview = await AvgTaskReview.findOne({
+        task: this.id,
+        user: changes["assignee"],
+      });
+
+      if (!avgTaskReview) {
+        await AvgTaskReview.create({
+          task: this.id,
+          user: changes["assignee"],
+        });
+      }
+
+      if (!taskReview) {
+        const project = await Project.findById(this.project);
+        project.hosts.forEach(async (host) => {
+          await TaskReview.create({
+            author: host.id,
+            project: this.project,
+            task: this.id,
+            user: this.assignee,
+            point: _.random(0, 10),
+          });
+        });
+      }
+    }
+
+    if (
+      _.includes(Object.keys(changes), "status") &&
+      changes["status"] === "closed" &&
+      !taskReview
+    ) {
+      const project = await Project.findById(this.project);
+      project.hosts.forEach(async (host) => {
+        await TaskReview.create({
+          author: host.id,
+          project: this.project,
+          task: this.id,
+          user: this.assignee,
+          point: _.random(0, 10),
+        });
+      });
+    }
   }
+  next();
 });
 
 taskSchema.post(/^save/, async function (child) {
   try {
-    if (!child.populated("registered_by assignee milestone activity")) {
+    if (!child.populated("registered_by assignee milestone activity topics")) {
       await child
         .populate({
-          path: "registered_by assignee milestone activity",
+          path: "registered_by assignee milestone activity topics",
           options: { _recursed: true },
         })
         .execPopulate();
@@ -182,6 +240,7 @@ taskSchema.methods = {
             ? this.children.map((child) => child.view())
             : this.children,
           parent: this.parent,
+          topics: this.topics.map((topic) => topic.view()),
         }
       : view;
   },

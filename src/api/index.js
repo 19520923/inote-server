@@ -16,6 +16,8 @@ import message from "./message";
 import verifyCode from "./verify-code";
 import file from './file'
 import activity from './activity'
+import taskReview from './task_review'
+import assigneeRecommendation from './assignee_recommendation'
 
 const router = new Router();
 
@@ -59,5 +61,7 @@ router.use("/messages", message);
 router.use("/verify-code", verifyCode);
 router.use('/files', file)
 router.use('/activities', activity)
+router.use('/task_reviews', taskReview)
+router.use('/assignee_recommendations', assigneeRecommendation)
 
 export default router;
