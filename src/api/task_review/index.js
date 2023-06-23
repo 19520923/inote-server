@@ -12,6 +12,10 @@ const q_schema = new Schema({
     type: String,
     required: true,
   },
+  author: {
+    type: String,
+    required: true,
+  },
 });
 
 const { point, text } = schema.tree;
