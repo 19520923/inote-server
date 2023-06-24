@@ -56,14 +56,9 @@ const report_schema = new Schema({
     required: true,
   },
   // assignee: String,
-  after: {
-    type: Date,
-    paths: ["due_date", "start_date"],
-    operator: "$gte",
-  },
   before: {
     type: Date,
-    paths: ["due_date", "start_date"],
+    paths: ["created_at"],
     operator: "$lte",
   },
 });

@@ -133,7 +133,7 @@ taskSchema.pre(/^save/, async function (next) {
     });
     if (
       _.includes(Object.keys(changes), "assignee") &&
-      changes["assignee"] !== this.assignee
+      String(changes["assignee"]) !== String(this.assignee)
     ) {
       await Notification.create({
         content: `${this.subject} (${this.key}) has been assigned to you`,

@@ -62,7 +62,7 @@ taskReviewSchema.post(/^save/, async function (child) {
       });
       const avg_point = _.sumBy(
         taskReviews,
-        (t) => t.point / taskReviews.length
+        (t) => t.point / (taskReviews.length || 1)
       );
       await AvgTaskReview.findOneAndUpdate(
         {
@@ -96,6 +96,7 @@ taskReviewSchema.methods = {
       id: this.id,
       author: this.author.view(),
       project: this.project,
+      user: this.user.view(),
       task: this.task && this.task.view(true),
       point: this.point,
       text: this.text,

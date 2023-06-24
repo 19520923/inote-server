@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import socket from "../../services/socket";
 
 const fileSchema = new Schema(
   {
@@ -51,6 +52,7 @@ fileSchema.post(/^save/, async function (child) {
         })
         .execPopulate();
     }
+    socket.to("file:update", child.project.toString(), child.view());
   } catch (err) {
     console.log(err);
   }
