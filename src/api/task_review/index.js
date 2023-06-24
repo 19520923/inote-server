@@ -8,14 +8,10 @@ export TaskReview, { schema } from "./model";
 
 const router = new Router();
 const q_schema = new Schema({
-  project: {
-    type: String,
-    required: true,
-  },
-  author: {
-    type: String,
-    required: true,
-  },
+  project: String,
+  author: String,
+  user: String,
+  task: String,
 });
 
 const { point, text } = schema.tree;

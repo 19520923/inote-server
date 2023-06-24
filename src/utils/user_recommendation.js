@@ -17,7 +17,7 @@ export const calculateSuitablePoint = (taskReviews, tags) => {
     _.sumBy(tagMatrix, (e) => e[index])
   );
 
-  const totalTagPoints = _.sum(tagPoints) === 0 ? 1 : 0;
+  const totalTagPoints = _.sum(tagPoints) || 1;
   const avgTagPoints = tagPoints.map((e) => e / totalTagPoints);
   return avgTagPoints;
 };

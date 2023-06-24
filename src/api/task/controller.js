@@ -14,7 +14,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
         Task.create({
           ...body,
           registered_by: user,
-          key: `${project.acronym}_${count + 1}`,
+          key: `${project.acronym}_${String(count + 1).padStart(4, "0")}`,
         })
           .then((task) => task.view(true))
           .then(async (task) => {

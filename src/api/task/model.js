@@ -164,7 +164,7 @@ taskSchema.pre(/^save/, async function (next) {
             project: this.project,
             task: this.id,
             user: this.assignee,
-            point: _.random(1, 10),
+            point: 0,
           });
         });
       }
@@ -182,7 +182,7 @@ taskSchema.pre(/^save/, async function (next) {
           project: this.project,
           task: this.id,
           user: this.assignee,
-          point: _.random(1, 10),
+          point: 0,
         });
       });
     }
