@@ -124,68 +124,15 @@ taskSchema.pre(/^find/, function (next) {
 });
 
 taskSchema.pre(/^save/, async function (next) {
-  const changes = this.getChanges().$set;
   if (this.assignee) {
-    const taskReview = await TaskReview.findOne({
+    await Notification.create({
+      content: `${this.subject} (${this.key}) has been assigned to you`,
+      author: this.registered_by,
+      type: "task",
+      receiver: this.assignee,
+      data: this.id,
       project: this.project,
-      task: this.id,
-      user: this.assignee,
     });
-    if (
-      _.includes(Object.keys(changes), "assignee") &&
-      String(changes["assignee"]) !== String(this.assignee)
-    ) {
-      await Notification.create({
-        content: `${this.subject} (${this.key}) has been assigned to you`,
-        author: this.registered_by,
-        type: "task",
-        receiver: changes["assignee"],
-        data: this.id,
-        project: this.project,
-      });
-
-      const avgTaskReview = await AvgTaskReview.findOne({
-        task: this.id,
-        user: changes["assignee"],
-      });
-
-      if (!avgTaskReview) {
-        await AvgTaskReview.create({
-          task: this.id,
-          user: changes["assignee"],
-        });
-      }
-
-      if (!taskReview) {
-        const project = await Project.findById(this.project);
-        project.hosts.forEach(async (host) => {
-          await TaskReview.create({
-            author: host.id,
-            project: this.project,
-            task: this.id,
-            user: this.assignee,
-            point: 0,
-          });
-        });
-      }
-    }
-
-    if (
-      _.includes(Object.keys(changes), "status") &&
-      changes["status"] === "closed" &&
-      !taskReview
-    ) {
-      const project = await Project.findById(this.project);
-      project.hosts.forEach(async (host) => {
-        await TaskReview.create({
-          author: host.id,
-          project: this.project,
-          task: this.id,
-          user: this.assignee,
-          point: 0,
-        });
-      });
-    }
   }
   next();
 });

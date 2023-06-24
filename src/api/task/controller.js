@@ -3,6 +3,8 @@ import { Task } from ".";
 import { Notification } from "../notification";
 import { Project } from "../project";
 import { Comment } from "../comment";
+import { TaskReview } from "../task_review";
+import { AvgTaskReview } from "../avgTaskReview";
 import { getChangesContent } from "../../utils/comment";
 import _ from "lodash";
 
@@ -66,6 +68,61 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
         content: getChangesContent(oldTask, savedTask, changes),
         is_system: true,
       });
+
+      console.log("OLD_TASK", oldTask);
+      if (oldTask.assignee) {
+        const taskReview = await TaskReview.findOne({
+          project: oldTask.project,
+          task: oldTask,
+          user: oldTask.assignee,
+        });
+        if (
+          _.includes(Object.keys(changes), "assignee") &&
+          String(changes["assignee"]) !== String(oldTask.assignee.id)
+        ) {
+          const avgTaskReview = await AvgTaskReview.findOne({
+            task: oldTask,
+            user: changes["assignee"],
+          });
+
+          if (!avgTaskReview) {
+            await AvgTaskReview.create({
+              task: oldTask,
+              user: changes["assignee"],
+            });
+          }
+
+          if (!taskReview) {
+            const project = await Project.findById(oldTask.project);
+            project.hosts.forEach(async (host) => {
+              await TaskReview.create({
+                author: host.id,
+                project: oldTask.project,
+                task: oldTask,
+                user: oldTask.assignee,
+                point: 0,
+              });
+            });
+          }
+        }
+
+        if (
+          _.includes(Object.keys(changes), "status") &&
+          changes["status"] === "closed" &&
+          !taskReview
+        ) {
+          const project = await Project.findById(oldTask.project);
+          project.hosts.forEach(async (host) => {
+            await TaskReview.create({
+              author: host.id,
+              project: oldTask.project,
+              task: oldTask,
+              user: oldTask.assignee,
+              point: 0,
+            });
+          });
+        }
+      }
       return savedTask;
     })
     .then(async (task) => {
