@@ -2,8 +2,8 @@ import _ from "lodash";
 
 export const calculateSuitablePoint = (taskReviews, tags) => {
   const taskTopics = taskReviews.map((taskReview) => taskReview.task.topics);
-  const tagMatrix = taskTopics.map((taskTopic, index) =>
-    tags.map((tag) => {
+  const tagMatrix = tags.map((tag) =>
+    taskTopics.map((taskTopic, index) => {
       return _.findIndex(
         taskTopic,
         (e) => String(e._id) === String(tag._id)
@@ -13,9 +13,7 @@ export const calculateSuitablePoint = (taskReviews, tags) => {
     })
   );
 
-  const tagPoints = tags.map((tag, index) =>
-    _.sumBy(tagMatrix, (e) => e[index])
-  );
+  const tagPoints = tagMatrix.map((tag) => _.sum(tag));
 
   const totalTagPoints = _.sum(tagPoints) || 1;
   const avgTagPoints = tagPoints.map((e) => e / totalTagPoints);

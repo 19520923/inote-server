@@ -1,8 +1,21 @@
 import { success, notFound } from "../../services/response/";
 import { Interest } from ".";
+import { User } from "../user";
+import { AssigneeRecommendation } from "../assignee_recommendation";
 
 export const create = ({ bodymen: { body } }, res, next) =>
   Interest.create(body)
+    .then(async (interest) => {
+      const users = await User.find({});
+      users.forEach(async (user) => {
+        await AssigneeRecommendation.create({
+          user: user,
+          tag: interest,
+          avg_point: 0,
+        });
+      });
+      return interest;
+    })
     .then((interest) => interest.view())
     .then(success(res, 201))
     .catch(next);
