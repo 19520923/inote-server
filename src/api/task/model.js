@@ -4,6 +4,7 @@ import mongooseKeywords from "mongoose-keywords";
 import { Notification } from "../notification";
 import socket from "../../services/socket";
 import _ from "lodash";
+import { AvgTaskReview } from "../avgTaskReview";
 
 const taskSchema = new Schema(
   {
@@ -121,7 +122,8 @@ taskSchema.pre(/^find/, function (next) {
 });
 
 taskSchema.pre(/^save/, async function (next) {
-  if (this.assignee) {
+  const changes = this.getChanges().$set;
+  if (_.includes(Object.keys(changes), "assignee")) {
     await Notification.create({
       content: `${this.subject} (${this.key}) has been assigned to you`,
       author: this.registered_by,
@@ -130,6 +132,19 @@ taskSchema.pre(/^save/, async function (next) {
       data: this.id,
       project: this.project,
     });
+
+    const avgTaskReview = await AvgTaskReview.findOne({
+      task: this,
+      user: this.assignee,
+    });
+
+    if (!avgTaskReview) {
+      await AvgTaskReview.create({
+        task: this,
+        user: this.assignee,
+        avg_point: 0,
+      });
+    }
   }
   next();
 });

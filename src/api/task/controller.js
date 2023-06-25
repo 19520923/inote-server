@@ -4,7 +4,6 @@ import { Notification } from "../notification";
 import { Project } from "../project";
 import { Comment } from "../comment";
 import { TaskReview } from "../task_review";
-import { AvgTaskReview } from "../avgTaskReview";
 import { getChangesContent } from "../../utils/comment";
 import _ from "lodash";
 
@@ -75,24 +74,10 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
           "task.id": oldTask.id,
           user: oldTask.assignee,
         });
-        console.log(taskReview && taskReview.task.id, oldTask.id);
         if (
           _.includes(Object.keys(changes), "assignee") &&
           String(changes["assignee"]) !== String(oldTask.assignee.id)
         ) {
-          const avgTaskReview = await AvgTaskReview.findOne({
-            task: oldTask,
-            user: changes["assignee"],
-          });
-
-          if (!avgTaskReview) {
-            await AvgTaskReview.create({
-              task: oldTask,
-              user: changes["assignee"],
-              avg_point: 0,
-            });
-          }
-
           if (!taskReview) {
             const project = await Project.findById(oldTask.project);
             project.hosts.forEach(async (host) => {
