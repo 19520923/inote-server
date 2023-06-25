@@ -23,7 +23,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
             await Comment.create({
               task: task.id,
               author: user,
-              content: "Create new task",
+              content: "◉ Create new task",
               is_system: true,
             });
             return task;
@@ -69,13 +69,13 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
         is_system: true,
       });
 
-      console.log("OLD_TASK", oldTask);
       if (oldTask.assignee) {
         const taskReview = await TaskReview.findOne({
           project: oldTask.project,
-          task: oldTask,
+          "task.id": oldTask.id,
           user: oldTask.assignee,
         });
+        console.log(taskReview && taskReview.task.id, oldTask.id);
         if (
           _.includes(Object.keys(changes), "assignee") &&
           String(changes["assignee"]) !== String(oldTask.assignee.id)
@@ -98,7 +98,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
               await TaskReview.create({
                 author: host.id,
                 project: oldTask.project,
-                task: oldTask,
+                task: oldTask.view(true),
                 user: oldTask.assignee,
                 point: 0,
               });
@@ -108,7 +108,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
 
         if (
           _.includes(Object.keys(changes), "status") &&
-          changes["status"] === "closed" &&
+          String(changes["status"]) === "resolved" &&
           !taskReview
         ) {
           const project = await Project.findById(oldTask.project);
@@ -116,7 +116,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
             await TaskReview.create({
               author: host.id,
               project: oldTask.project,
-              task: oldTask,
+              task: oldTask.view(true),
               user: oldTask.assignee,
               point: 0,
             });

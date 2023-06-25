@@ -3,9 +3,6 @@ import { TASK_PRIORITY, TASK_STATUS } from "../../constants";
 import mongooseKeywords from "mongoose-keywords";
 import { Notification } from "../notification";
 import socket from "../../services/socket";
-import { Project } from "../project";
-import { TaskReview } from "../task_review";
-import { AvgTaskReview } from "../avgTaskReview";
 import _ from "lodash";
 
 const taskSchema = new Schema(
@@ -187,7 +184,7 @@ taskSchema.methods = {
             ? this.children.map((child) => child.view())
             : this.children,
           parent: this.parent,
-          topics: this.topics.map((topic) => topic.view()),
+          topics: this.topics && this.topics.map((topic) => topic.view()),
         }
       : view;
   },

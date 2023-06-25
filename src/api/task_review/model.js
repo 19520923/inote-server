@@ -4,6 +4,86 @@ import { Interest } from "../interest";
 import { AvgTaskReview } from "../avgTaskReview";
 import { AssigneeRecommendation } from "../assignee_recommendation";
 import _ from "lodash";
+import { TASK_PRIORITY, TASK_STATUS } from "../../constants";
+
+const taskSchema = Schema({
+  id: String,
+  project: {
+    type: Schema.ObjectId,
+    ref: "Project",
+  },
+  key: {
+    type: String,
+  },
+  content: {
+    type: String,
+  },
+  subject: {
+    type: String,
+  },
+  registered_by: {
+    id: String,
+    avatar: String,
+    fullname: String,
+    username: String,
+  },
+  assignee: {
+    id: String,
+    avatar: String,
+    fullname: String,
+    username: String,
+  },
+  status: {
+    type: String,
+    enum: TASK_STATUS,
+    default: TASK_STATUS[0],
+  },
+  priority: {
+    type: String,
+    enum: TASK_PRIORITY,
+    default: TASK_PRIORITY[0],
+  },
+  milestone: {
+    id: String,
+    name: String,
+  },
+  estimate: {
+    type: Number,
+    min: 0,
+  },
+  actual: {
+    type: Number,
+    min: 0,
+  },
+  start_date: {
+    type: Date,
+  },
+  due_date: {
+    type: Date,
+  },
+  end_date: {
+    type: Date,
+  },
+  opened_at: {
+    type: Date,
+  },
+  deleted_flag: {
+    type: Boolean,
+  },
+  is_remind: {
+    type: Boolean,
+  },
+  activity: {
+    id: String,
+    name: String,
+  },
+  topics: [
+    new Schema({
+      id: String,
+      name: String,
+    }),
+  ],
+});
 
 const taskReviewSchema = new Schema(
   {
@@ -16,10 +96,7 @@ const taskReviewSchema = new Schema(
       type: Schema.ObjectId,
       ref: "Project",
     },
-    task: {
-      type: Schema.ObjectId,
-      ref: "Task",
-    },
+    task: taskSchema,
     user: {
       type: Schema.ObjectId,
       ref: "User",
@@ -40,17 +117,17 @@ taskReviewSchema.pre(/^find/, function (next) {
     return next();
   }
   this.populate({
-    path: "task author",
+    path: "author",
   });
   next();
 });
 
 taskReviewSchema.post(/^save/, async function (child) {
   try {
-    if (!child.populated("author task")) {
+    if (!child.populated("author")) {
       await child
         .populate({
-          path: "author task",
+          path: "author",
         })
         .execPopulate();
     }
@@ -96,8 +173,8 @@ taskReviewSchema.methods = {
       id: this.id,
       author: this.author.view(),
       project: this.project,
-      user: this.user.view(),
-      task: this.task && this.task.view(true),
+      user: this.user,
+      task: this.task,
       point: this.point,
       text: this.text,
       created_at: this.created_at,

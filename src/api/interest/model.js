@@ -4,7 +4,7 @@ const interestSchema = new Schema(
   {
     name: {
       type: String,
-      requried: true,
+      required: true,
     },
     deleted_flag: {
       type: Boolean,

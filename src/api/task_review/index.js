@@ -11,7 +11,7 @@ const q_schema = new Schema({
   project: String,
   author: String,
   user: String,
-  task: String,
+  task: { type: String, paths: ["task.id"] },
 });
 
 const { point, text } = schema.tree;
