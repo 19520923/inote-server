@@ -89,6 +89,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
             await AvgTaskReview.create({
               task: oldTask,
               user: changes["assignee"],
+              avg_point: 0,
             });
           }
 
