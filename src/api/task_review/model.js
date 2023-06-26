@@ -132,22 +132,23 @@ taskReviewSchema.post(/^save/, async function (child) {
         .execPopulate();
     }
     if (child.point) {
-      const taskReviews = await this.model("TaskReview").find({
-        task: child.task,
+      const userTaskReviews = await this.model("TaskReview").find({
+        "task.id": child.task.id,
         user: child.user,
-        point: { $ne: null },
+        point: { $ne: 0 },
       });
       const avg_point = _.sumBy(
-        taskReviews,
-        (t) => t.point / (taskReviews.length || 1)
+        userTaskReviews,
+        (t) => t.point / (userTaskReviews.length || 1)
       );
       await AvgTaskReview.findOneAndUpdate(
         {
-          task: child.task,
+          task: child.task.id,
           user: child.user,
         },
         { avg_point: avg_point }
-      ).then(async () => {
+      )
+      .then(async () => {
         const taskReviews = await AvgTaskReview.find({
           user: child.user,
         }).populate({ path: "task" });
