@@ -48,7 +48,7 @@ const config = {
   test: {},
   development: {
     mongo: {
-      uri: "mongodb+srv://admin:admin@cluster0.dqfifjx.mongodb.net/?retryWrites=true&w=majority",
+      uri: "mongodb+srv://admin:admin@cluster0.dqfifjx.mongodb.net/test?retryWrites=true&w=majority",
       // uri: "mongodb+srv://19520923:admin@cluster0.4cmmtjt.mongodb.net/?retryWrites=true&w=majority",
       options: {
         debug: true,
@@ -61,7 +61,7 @@ const config = {
     mongo: {
       uri:
         process.env.MONGODB_URI ||
-        "mongodb+srv://admin:admin@cluster0.dqfifjx.mongodb.net/?retryWrites=true&w=majority",
+        "mongodb+srv://admin:admin@cluster0.dqfifjx.mongodb.net/prod?retryWrites=true&w=majority",
     },
   },
 };

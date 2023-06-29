@@ -11,7 +11,7 @@ const passwordResetSchema = new Schema({
     type: String,
     unique: true,
     index: true,
-    default: () => uid(32)
+    default: () => uid(8)
   },
   createdAt: {
     type: Date,

@@ -34,23 +34,22 @@ export const showMe = ({ user }, res) => res.json(user.view(true));
 export const create = ({ bodymen: { body } }, res, next) =>
   User.create(body)
     .then(async (user) => {
-      const code = Math.floor(100000 + Math.random() * 900000);
       await VerifyCode.create({
         user_id: user.id,
         email: user.email,
-        code: code,
-      });
-      sendMail({
-        subject: "Verify email",
-        to: user.email,
-        html: `<p>Hello,</p> <p>Before verifying your email, please confirm that the email of your INote accout is ${user.email}.</p><p><b>If the above email is correct</b>, verify by entering verification code below to application:</p><h1>${code}</h1>Incorrect email? <b>Do not verify</b>, and ignore this email.</p><p>Verification code is available in 15 minutes</p>`,
-      });
+      }).then((verify) =>
+        sendMail({
+          subject: "Verify email",
+          to: user.email,
+          html: `<p>Hello,</p> <p>Before verifying your email, please confirm that the email of your INote account is ${user.email}.</p><p><b>If the above email is correct</b>, verify by entering verification code below to application:</p><h1>${verify.code}</h1>Incorrect email? <b>Do not verify</b>, and ignore this email.</p><p>Verification code is available in 15 minutes</p>`,
+        })
+      );
 
       const tags = await Interest.find({});
       tags.forEach(async (tag) => {
         await AssigneeRecommendation.create({
-          tag: tag._id,
-          user: user.id,
+          tag: tag,
+          user: user,
           avg_point: 0,
         });
       });

@@ -198,85 +198,89 @@ export const report = ({ querymen: { query } }, res, next) =>
         status: "pending",
       });
 
-      const project = await Project.findById(query.project);
-      const user_reports = await Promise.all(
-        [...project.members, ...project.hosts].map(async (e) => {
-          const count_user_tasks = await Task.count({
-            ...query,
-            assignee: e.id,
-            deleted_flag: false,
-          });
-          const low_user_tasks = await Task.count({
-            ...query,
-            assignee: e.id,
-            deleted_flag: false,
-            priority: "low",
-          });
-          const normal_user_tasks = await Task.count({
-            ...query,
-            assignee: e.id,
-            deleted_flag: false,
-            priority: "normal",
-          });
-          const high_user_tasks = await Task.count({
-            ...query,
-            assignee: e.id,
-            deleted_flag: false,
-            priority: "high",
-          });
-          const important_user_tasks = await Task.count({
-            ...query,
-            assignee: e.id,
-            deleted_flag: false,
-            priority: "important",
-          });
+      let user_reports;
 
-          const open_user_tasks = await Task.count({
-            ...query,
-            assignee: e.id,
-            deleted_flag: false,
-            status: "open",
-          });
-          const in_progress_user_tasks = await Task.count({
-            ...query,
-            assignee: e.id,
-            deleted_flag: false,
-            status: "in_progress",
-          });
-          const resolved_user_tasks = await Task.count({
-            ...query,
-            assignee: e.id,
-            deleted_flag: false,
-            status: "resolved",
-          });
-          const closed_user_tasks = await Task.count({
-            ...query,
-            assignee: e.id,
-            deleted_flag: false,
-            status: "closed",
-          });
-          const pending_user_tasks = await Task.count({
-            ...query,
-            assignee: e.id,
-            deleted_flag: false,
-            status: "pending",
-          });
+      if (query.project) {
+        const project = await Project.findById(query.project);
+        user_reports = await Promise.all(
+          [...project.members, ...project.hosts].map(async (e) => {
+            const count_user_tasks = await Task.count({
+              ...query,
+              assignee: e.id,
+              deleted_flag: false,
+            });
+            const low_user_tasks = await Task.count({
+              ...query,
+              assignee: e.id,
+              deleted_flag: false,
+              priority: "low",
+            });
+            const normal_user_tasks = await Task.count({
+              ...query,
+              assignee: e.id,
+              deleted_flag: false,
+              priority: "normal",
+            });
+            const high_user_tasks = await Task.count({
+              ...query,
+              assignee: e.id,
+              deleted_flag: false,
+              priority: "high",
+            });
+            const important_user_tasks = await Task.count({
+              ...query,
+              assignee: e.id,
+              deleted_flag: false,
+              priority: "important",
+            });
 
-          return {
-            user: e.view(),
-            total: count_user_tasks,
-            low: low_user_tasks,
-            normal: normal_user_tasks,
-            high: high_user_tasks,
-            important: important_user_tasks,
-            open: open_user_tasks,
-            in_progress: in_progress_user_tasks,
-            resolved: resolved_user_tasks,
-            closed: closed_user_tasks,
-            pending: pending_user_tasks,
-          };
-        })
-      );
+            const open_user_tasks = await Task.count({
+              ...query,
+              assignee: e.id,
+              deleted_flag: false,
+              status: "open",
+            });
+            const in_progress_user_tasks = await Task.count({
+              ...query,
+              assignee: e.id,
+              deleted_flag: false,
+              status: "in_progress",
+            });
+            const resolved_user_tasks = await Task.count({
+              ...query,
+              assignee: e.id,
+              deleted_flag: false,
+              status: "resolved",
+            });
+            const closed_user_tasks = await Task.count({
+              ...query,
+              assignee: e.id,
+              deleted_flag: false,
+              status: "closed",
+            });
+            const pending_user_tasks = await Task.count({
+              ...query,
+              assignee: e.id,
+              deleted_flag: false,
+              status: "pending",
+            });
+
+            return {
+              user: e.view(),
+              total: count_user_tasks,
+              low: low_user_tasks,
+              normal: normal_user_tasks,
+              high: high_user_tasks,
+              important: important_user_tasks,
+              open: open_user_tasks,
+              in_progress: in_progress_user_tasks,
+              resolved: resolved_user_tasks,
+              closed: closed_user_tasks,
+              pending: pending_user_tasks,
+            };
+          })
+        );
+      }
 
       return {
         total: count,

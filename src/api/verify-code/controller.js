@@ -14,14 +14,20 @@ export const verify = ({ user, bodymen: { body } }, res, next) =>
         res.status(400).end();
         return null;
       }
-      user.set({ verified: true }).save();
-      return verified;
+      return user
+        .set({ verified: true })
+
+        .save()
+        .then(async (u) => {
+          await VerifyCode.deleteMany({ user_id: u.id });
+          return u;
+        });
     })
-    .then((verified) =>
-      verified
-        ? sign(user.id)
+    .then((u) =>
+      u
+        ? sign(u.id)
             .then((token) =>
-              user.verified ? { token, user: user.view(true) } : null
+              u.verified ? { token, user: u.view(true) } : null
             )
             .then(notFound(res))
             .then(success(res, 201))
@@ -34,7 +40,6 @@ export const resend = ({ user }, res, next) =>
   VerifyCode.create({
     user_id: user.id,
     email: user.email,
-    code: Math.floor(100000 + Math.random() * 900000),
   })
     .then((verify) => {
       sendMail({

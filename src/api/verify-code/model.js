@@ -4,7 +4,11 @@ const verifyCodeSchema = new Schema(
   {
     user_id: String,
     email: String,
-    code: Number,
+    code: {
+      type: Number,
+      index: true,
+      default: Math.floor(100000 + Math.random() * 900000),
+    },
     status: {
       type: Number,
       default: 0,
@@ -21,7 +25,6 @@ verifyCodeSchema.methods = {
       // simple view
       id: this.id,
       user_id: this.user_id,
-      code: this.code,
       status: this.status,
     };
   },

@@ -25,7 +25,7 @@ const {
   deleted_flag,
   is_remind,
   activity,
-  topics
+  topics,
 } = schema.tree;
 
 const schema_q = new Schema({
@@ -53,9 +53,8 @@ const schema_q = new Schema({
 const report_schema = new Schema({
   project: {
     type: String,
-    required: true,
   },
-  // assignee: String,
+  assignee: String,
   before: {
     type: Date,
     paths: ["created_at"],
