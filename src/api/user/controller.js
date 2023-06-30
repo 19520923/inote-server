@@ -8,10 +8,15 @@ import { AssigneeRecommendation } from "../assignee_recommendation";
 import _ from "lodash";
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  User.count({ ...query, deleted_flag: false, _id: { $ne: botId } })
+  User.count({
+    ...query,
+    deleted_flag: false,
+    _id: { $ne: botId },
+    verified: true,
+  })
     .then((count) =>
       User.find(
-        { ...query, deleted_flag: false, _id: { $ne: botId } },
+        { ...query, deleted_flag: false, _id: { $ne: botId }, verified: true },
         select,
         cursor
       ).then((users) => ({
