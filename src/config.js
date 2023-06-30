@@ -50,7 +50,7 @@ const config = {
     mongo: {
       // INote -> test: Để test local nha
       uri: "mongodb+srv://admin:admin@cluster0.dqfifjx.mongodb.net/test?retryWrites=true&w=majority",
-      // INote -> prod: Để tạo data mẫu 
+      // INote -> prod: Để tạo data mẫu bằng local nha
       // uri: "mongodb+srv://admin:admin@cluster0.dqfifjx.mongodb.net/prod?retryWrites=true&w=majority",
       // INoteTest -> test: Để test local nha
       // uri: "mongodb+srv://19520923:admin@cluster0.4cmmtjt.mongodb.net/?retryWrites=true&w=majority",
