@@ -158,6 +158,7 @@ userSchema.methods = {
           deleted_flag: this.deleted_flag,
           interests: this.interests,
           gender: this.gender,
+          verified: this.verified,
         }
       : view;
   },
