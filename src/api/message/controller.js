@@ -24,21 +24,21 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
         if (message.to && message.to.length) {
           message.to.forEach(async (t) => {
             await Notification({
-              content: `${user.fullname} mention you in chat "${chat.content}"`,
+              content: `${user.fullname} mention you in chat "${message.content}"`,
               author: user,
               type: "chat",
               receiver: t,
-              project: chat.project,
+              project: message.project,
             });
           });
         }
         if (message.reply_to) {
           await Notification({
-            content: `${user.fullname} reply you in chat "${chat.content}"`,
+            content: `${user.fullname} reply you in chat "${message.content}"`,
             author: user,
             type: "task",
             receiver: message.reply_to,
-            project: chat.project,
+            project: message.project,
           });
         }
       }
