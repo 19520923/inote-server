@@ -18,7 +18,7 @@ export const TASK_STATUS = [
   "closed",
 ];
 export const TASK_PRIORITY = ["low", "normal", "high", "important"];
-export const REMINDER_REPEAT = ["none", "daily", "monthly", "annual"];
+export const REMINDER_REPEAT = ["none", "week", "day", "month", "year"];
 export const MESSAGE_TYPE = ["text", "image", "quote", "video"];
 export const NOTE_TYPE = ["text", "draw"];
 

@@ -2,6 +2,7 @@ import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Message } from ".";
 import _ from "lodash";
 import { getAnswer } from "../../services/openai";
+import { Notification } from "../notification";
 import { botId } from "../../config";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
@@ -17,6 +18,27 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
             content: reply_content,
             reply_to: message.id,
             project: message.project,
+          });
+        }
+      } else {
+        if (message.to && message.to.length) {
+          message.to.forEach(async (t) => {
+            await Notification({
+              content: `${user.fullname} mention you in chat "${chat.content}"`,
+              author: user,
+              type: "chat",
+              receiver: t,
+              project: chat.project,
+            });
+          });
+        }
+        if (message.reply_to) {
+          await Notification({
+            content: `${user.fullname} reply you in chat "${chat.content}"`,
+            author: user,
+            type: "task",
+            receiver: message.reply_to,
+            project: chat.project,
           });
         }
       }

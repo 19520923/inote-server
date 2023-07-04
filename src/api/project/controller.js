@@ -95,7 +95,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
           });
           project.hosts.forEach(async (host) => {
             await Notification.create({
-              content: `You have been invited to project ${project.name} (${project.acronym}) as a host`,
+              content: `${project.name} (${project.acronym}) has been updated`,
               author: user,
               type: "project",
               receiver: host.id,

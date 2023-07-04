@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { middleware as query } from "querymen";
+import { middleware as query, Schema } from "querymen";
 import { middleware as body } from "bodymen";
 import { token } from "../../services/passport";
 import { create, index, update } from "./controller";
@@ -8,6 +8,10 @@ export Notification, { schema } from "./model";
 
 const router = new Router();
 const { content, type, receiver, isSeen } = schema.tree;
+const q_shema = new Schema({
+  type: String,
+  project: String,
+});
 
 /**
  * @api {post} /notifications Create notification
@@ -46,7 +50,7 @@ router.post(
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 401 admin access only.
  */
-router.get("/", token({ required: true }), query(), index);
+router.get("/", token({ required: true }), query(q_shema), index);
 
 /* Updating the notification. */
 router.put("/:id", token({ required: true }), body({ isSeen }), update);

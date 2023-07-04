@@ -1,6 +1,7 @@
 import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Reminder } from ".";
 import _ from "lodash";
+import { mongooseObjectID } from "../../constants";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Reminder.create({ ...body, author: user })
@@ -8,7 +9,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
     .then(success(res, 201))
     .catch(next);
 
-export const index = ({ querymen: { query, select, cursor } }, res, next) =>
+export const index = ({user, querymen: { query, select, cursor } }, res, next) =>
   Reminder.count({ ...query, author: user, deleted_flag: false })
     .then((count) =>
       Reminder.find(
@@ -28,9 +29,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     .then(notFound(res))
     .then(authorOrAdmin(res, user, "author"))
     .then((reminder) =>
-      reminder
-        ? Object.assign(reminder, _.omitBy(body, _.isNil)).save()
-        : null
+      reminder ? Object.assign(reminder, _.omitBy(body, _.isNil)).save() : null
     )
     .then((reminder) => (reminder ? reminder.view() : null))
     .then(success(res))
@@ -47,7 +46,7 @@ export const destroy = ({ user, params }, res, next) =>
 export const sync = async ({ user, bodymen: { body } }, res, next) => {
   const res_data = await Promise.all(
     body.reminders.map((r, index) =>
-      r.id
+      mongooseObjectID.test(r.id)
         ? Reminder.findById(r.id)
             .then((reminder) =>
               reminder

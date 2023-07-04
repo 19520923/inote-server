@@ -9,6 +9,11 @@ const commentSchema = new Schema(
       ref: "User",
       required: true,
     },
+    project: {
+      type: Schema.ObjectId,
+      ref: "Project",
+      required: true,
+    },
     is_system: {
       type: Boolean,
       default: false,

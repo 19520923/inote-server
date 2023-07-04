@@ -7,7 +7,7 @@ const verifyCodeSchema = new Schema(
     code: {
       type: Number,
       index: true,
-      default: Math.floor(100000 + Math.random() * 900000),
+      default: () => Math.floor(100000 + Math.random() * 900000),
     },
     status: {
       type: Number,

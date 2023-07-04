@@ -30,7 +30,7 @@ const reminderSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    repeat: {
+    every: {
       type: String,
       enum: REMINDER_REPEAT,
       default: "none",
@@ -55,6 +55,7 @@ reminderSchema.methods = {
       time: this.time,
       is_done: this.is_done,
       is_remind: this.is_remind,
+      every: this.every,
       deleted_flag: this.deleted_flag,
       created_at: this.created_at,
       updated_at: this.updated_at,

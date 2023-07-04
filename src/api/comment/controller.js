@@ -1,9 +1,34 @@
 import { success, notFound, authorOrAdmin } from "../../services/response/";
 import { Comment } from ".";
+import { Notification } from "../notification";
 import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Comment.create({ ...body, author: user })
+    .then(async(comment) => {
+      if (!comment) return null;
+      if (comment.to && comment.to.length) {
+        comment.to.forEach(async (t) => {
+          await Notification({
+            content: `${user.fullname} mention you in comment "${comment.content}"`,
+            author: user,
+            type: "task",
+            receiver: t,
+            project: comment.project,
+          });
+        });
+      }
+
+      if (comment.reply_to) {
+        await Notification({
+          content: `${user.fullname} mention you in comment "${comment.content}"`,
+          author: user,
+          type: "task",
+          receiver: comment.reply_to.author,
+          project: comment.project,
+        });
+      }
+    })
     .then((comment) => comment.view(true))
     .then(success(res, 201))
     .catch(next);

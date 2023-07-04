@@ -14,6 +14,7 @@ const {
   is_done,
   is_remind,
   deleted_flag,
+  every,
   created_at,
   updated_at,
 } = schema.tree;
@@ -48,6 +49,7 @@ router.post(
     deleted_flag,
     created_at,
     updated_at,
+    every,
   }),
   create
 );
@@ -86,7 +88,16 @@ router.get("/", token({ required: true }), query(), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ title, content, time, is_done, is_remind, deleted_flag, updated_at }),
+  body({
+    title,
+    content,
+    time,
+    is_done,
+    is_remind,
+    deleted_flag,
+    updated_at,
+    every,
+  }),
   update
 );
 
