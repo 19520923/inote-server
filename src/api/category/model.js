@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { Note } from "../note";
 
 const categorySchema = new Schema(
   {
@@ -20,6 +21,10 @@ const categorySchema = new Schema(
       required: true,
       index: true,
     },
+    deleted_flag: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -29,6 +34,16 @@ const categorySchema = new Schema(
 const syncCategoriesSchema = new Schema({
   // categories: [{ type: categorySchema, required: true }],
   categories: [{ type: categorySchema, required: true }],
+});
+
+categorySchema.post(/^save/, async function (child) {
+  try {
+    if (child.deleted_flag) {
+      await Note.updateMany({ category: child }, { $unset: { category: 1 } });
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 categorySchema.methods = {

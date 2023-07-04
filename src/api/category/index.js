@@ -7,7 +7,7 @@ import { token } from "../../services/passport";
 export Category, { schema } from "./model";
 
 const router = new Router();
-const { name, is_hide, order, updated_at, deleted_flag, created_at } =
+const { name, is_hide, order, updated_at, created_at } =
   schema.tree;
 const { categories } = sync_schema.tree;
 
@@ -56,7 +56,7 @@ router.get("/", token({ required: true }), query(), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ name, is_hide, order, deleted_flag, updated_at }),
+  body({ name, is_hide, order, updated_at }),
   update
 );
 
