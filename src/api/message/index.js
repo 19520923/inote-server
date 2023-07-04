@@ -7,7 +7,16 @@ import { schema } from "./model";
 export Message, { schema } from "./model";
 
 const router = new Router();
-const { project, reply_to, content, deleted_flag, images, to, is_pinned, is_edited } = schema.tree;
+const {
+  project,
+  reply_to,
+  content,
+  deleted_flag,
+  images,
+  to,
+  is_pinned,
+  is_edited,
+} = schema.tree;
 
 const schema_q = new Schema({
   project: {
