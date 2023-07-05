@@ -36,7 +36,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
           await Notification.create({
             content: `${user.fullname} reply you in chat "${message.content}"`,
             author: user,
-            type: "task",
+            type: "chat",
             receiver: message.reply_to.author,
             project: message.project,
           });
