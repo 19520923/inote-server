@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Notification, { schema } from "./model";
 
 const router = new Router();
-const { content, type, receiver, isSeen } = schema.tree;
+const { content, type, receiver, is_seen } = schema.tree;
 const q_shema = new Schema({
   type: String,
   project: String,
@@ -53,6 +53,6 @@ router.post(
 router.get("/", token({ required: true }), query(q_shema), index);
 
 /* Updating the notification. */
-router.put("/:id", token({ required: true }), body({ isSeen }), update);
+router.put("/:id", token({ required: true }), body({ is_seen }), update);
 
 export default router;

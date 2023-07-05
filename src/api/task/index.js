@@ -48,8 +48,26 @@ const schema_q = new Schema({
     paths: ["due_date"],
     operator: "$lte",
   },
-  start_date: Date,
-  due_date: Date,
+  after_start_date: {
+    type: Date,
+    paths: ["start_date"],
+    operator: "$gt",
+  },
+  before_start_date: {
+    type: Date,
+    paths: ["start_date"],
+    operator: "$lt",
+  },
+  after_due_date: {
+    type: Date,
+    paths: ["due_date"],
+    operator: "$gt",
+  },
+  before_due_date: {
+    type: Date,
+    paths: ["due_date"],
+    operator: "$lt",
+  },
 });
 
 const report_schema = new Schema({

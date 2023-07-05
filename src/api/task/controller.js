@@ -39,7 +39,7 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
       Task.find({ ...query, deleted_flag: false }, select, cursor).then(
         (tasks) => ({
           count,
-          rows: tasks.map((task) => task.view()),
+          rows: tasks.map((task) => task.view(true)),
         })
       )
     )
