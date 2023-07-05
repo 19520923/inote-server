@@ -23,7 +23,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
       } else {
         if (message.to && message.to.length) {
           message.to.forEach(async (t) => {
-            await Notification({
+            await Notification.create({
               content: `${user.fullname} mention you in chat "${message.content}"`,
               author: user,
               type: "chat",
@@ -33,11 +33,11 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
           });
         }
         if (message.reply_to) {
-          await Notification({
+          await Notification.create({
             content: `${user.fullname} reply you in chat "${message.content}"`,
             author: user,
             type: "task",
-            receiver: message.reply_to,
+            receiver: message.reply_to.author,
             project: message.project,
           });
         }

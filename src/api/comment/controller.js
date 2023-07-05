@@ -9,7 +9,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
       if (!comment) return null;
       if (comment.to && comment.to.length) {
         comment.to.forEach(async (t) => {
-          await Notification({
+          await Notification.create({
             content: `${user.fullname} mention you in comment "${comment.content}"`,
             author: user,
             type: "task",
@@ -20,7 +20,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
       }
 
       if (comment.reply_to) {
-        await Notification({
+        await Notification.create({
           content: `${user.fullname} mention you in comment "${comment.content}"`,
           author: user,
           type: "task",

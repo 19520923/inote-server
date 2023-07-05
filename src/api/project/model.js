@@ -1,6 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseKeywords from "mongoose-keywords";
 import { PROJECT_STATUS } from "../../constants";
+import { botId } from "../../config";
+import socket from "../../services/socket";
+import _ from "lodash";
 
 const projectSchema = new Schema(
   {
@@ -74,6 +77,11 @@ projectSchema.pre(/^find/, function (next) {
 
 projectSchema.post(/^save/, async function (child) {
   try {
+    const socket_ids = _.filter(
+      [...(child.hosts || []), ...(child.members || [])],
+      (e) => e !== child.author || e !== botId
+    );
+    console.log(socket_ids);
     if (!child.populated("author hosts members")) {
       await child
         .populate({
@@ -82,6 +90,7 @@ projectSchema.post(/^save/, async function (child) {
         })
         .execPopulate();
     }
+    socket.to("project:update", socket_ids, child.view());
   } catch (err) {
     console.log(err);
   }
