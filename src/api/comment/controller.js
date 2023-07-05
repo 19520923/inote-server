@@ -5,7 +5,7 @@ import _ from "lodash";
 
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Comment.create({ ...body, author: user })
-    .then(async(comment) => {
+    .then(async (comment) => {
       if (!comment) return null;
       if (comment.to && comment.to.length) {
         comment.to.forEach(async (t) => {
@@ -28,6 +28,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
           project: comment.project,
         });
       }
+      return comment;
     })
     .then((comment) => comment.view(true))
     .then(success(res, 201))

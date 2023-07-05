@@ -48,6 +48,8 @@ const schema_q = new Schema({
     paths: ["due_date"],
     operator: "$lte",
   },
+  start_date: Date,
+  due_date: Date,
 });
 
 const report_schema = new Schema({

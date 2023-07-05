@@ -24,6 +24,7 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
               author: user,
               content: "◉ Create new task",
               is_system: true,
+              project: task.project
             });
             return task;
           })
@@ -66,6 +67,7 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
         task: task.id,
         content: getChangesContent(oldTask, savedTask, changes),
         is_system: true,
+        project: task.project
       });
 
       if (oldTask.assignee) {

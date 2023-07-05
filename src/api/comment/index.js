@@ -7,7 +7,7 @@ import { schema } from "./model";
 export Comment, { schema } from "./model";
 
 const router = new Router();
-const { content, task, deleted_flag, is_system, reply_to, to } = schema.tree;
+const { content, task, deleted_flag, is_system, reply_to, to, project } = schema.tree;
 const q_schema = new Schema({
   task: {
     type: String,
@@ -33,7 +33,7 @@ const q_schema = new Schema({
 router.post(
   "/",
   token({ required: true }),
-  body({ content, task, is_system, reply_to, to }),
+  body({ content, task, is_system, reply_to, to, project }),
   create
 );
 
@@ -69,7 +69,7 @@ router.get("/", token({ required: true }), query(q_schema), index);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ content, task, deleted_flag, reply_to, to }),
+  body({ content, deleted_flag, reply_to, to }),
   update
 );
 
