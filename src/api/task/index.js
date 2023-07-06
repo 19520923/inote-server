@@ -35,7 +35,7 @@ const schema_q = new Schema({
   assignee: String,
   registered_by: String,
   is_remind: Boolean,
-  status: String,
+  status: [String],
   milestone: String,
   activity: String,
   after: {
