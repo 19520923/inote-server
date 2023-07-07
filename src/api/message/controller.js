@@ -8,7 +8,8 @@ import { botId } from "../../config";
 export const create = ({ user, bodymen: { body } }, res, next) =>
   Message.create({ ...body, author: user })
     .then(async (message) => {
-      const isReplyToBot = body.reply_to && body.reply_to === botId;
+      const isReplyToBot =
+        message.reply_to && message.reply_to.author.id === botId;
       const isToBot = body.to && _.includes(body.to, botId);
       if (isReplyToBot || isToBot) {
         const reply_content = await getAnswer(message.content);
