@@ -85,24 +85,23 @@ export const update = ({ user, bodymen: { body }, params }, res, next) =>
     )
     .then((project) => {
       if (project) {
-        project.members.forEach(async (member) => {
+        const ids = _.uniq(
+          [...project.members, ...project.hosts, project.author]
+            .filter((e) => e.id !== user.id)
+            .map((e) => e.id)
+        );
+        console.log("IDS", ids, user.id);
+
+        ids.forEach(async (u) => {
           await Notification.create({
             content: `${project.name} (${project.acronym}) has been updated`,
             author: user,
             type: "project",
-            receiver: member,
+            receiver: u,
             project: project.id,
           });
-          project.hosts.forEach(async (host) => {
-            await Notification.create({
-              content: `${project.name} (${project.acronym}) has been updated`,
-              author: user,
-              type: "project",
-              receiver: host.id,
-              project: project.id,
-            });
-          });
         });
+
         return project;
       }
       return null;
