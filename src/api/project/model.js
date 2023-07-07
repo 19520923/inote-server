@@ -80,8 +80,7 @@ projectSchema.post(/^save/, async function (child) {
     const socket_ids = _.filter(
       [...(child.hosts || []), ...(child.members || [])],
       (e) => e !== child.author || e !== botId
-    );
-    console.log(socket_ids);
+    ).map((e) => String(e));
     if (!child.populated("author hosts members")) {
       await child
         .populate({
