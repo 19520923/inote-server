@@ -51,6 +51,7 @@ messageSchema.pre(/^find/, function (next) {
   this.populate({
     path: "author reply_to to",
     options: { _recursed: true },
+    populate: "author",
   });
   next();
 });
@@ -62,6 +63,7 @@ messageSchema.post(/^save/, async function (child) {
         .populate({
           path: "author reply_to to",
           options: { _recursed: true },
+          populate: "author",
         })
         .execPopulate();
     }
