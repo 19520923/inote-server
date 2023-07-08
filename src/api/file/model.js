@@ -21,6 +21,10 @@ const fileSchema = new Schema(
       type: Schema.ObjectId,
       ref: "Project",
     },
+    deleted_flag: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -70,6 +74,7 @@ fileSchema.methods = {
       created_at: this.created_at,
       updated_at: this.updated_at,
       project: this.project,
+      deleted_flag: this.deleted_flag,
     };
   },
 };

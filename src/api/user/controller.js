@@ -13,10 +13,17 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     deleted_flag: false,
     _id: { $ne: botId },
     verified: true,
+    username: { $ne: null },
   })
     .then((count) =>
       User.find(
-        { ...query, deleted_flag: false, _id: { $ne: botId }, verified: true },
+        {
+          ...query,
+          deleted_flag: false,
+          _id: { $ne: botId },
+          verified: true,
+          username: { $ne: null },
+        },
         select,
         cursor
       ).then((users) => ({

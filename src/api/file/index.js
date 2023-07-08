@@ -7,7 +7,7 @@ import { schema, files_schema } from "./model";
 export File, { schema } from "./model";
 
 const router = new Router();
-const { name, url, size } = schema.tree;
+const { deleted_flag } = schema.tree;
 const { files } = files_schema.tree;
 
 const schema_q = new Schema({
@@ -60,11 +60,6 @@ router.get("/", token({ required: true }), query(schema_q), index);
  * @apiError 404 File not found.
  * @apiError 401 user access only.
  */
-router.put(
-  "/:id",
-  token({ required: true }),
-  body({ name, url, size }),
-  update
-);
+router.put("/:id", token({ required: true }), body({ deleted_flag }), update);
 
 export default router;

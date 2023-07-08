@@ -110,32 +110,6 @@ userSchema.pre("save", function (next) {
     .catch(next);
 });
 
-userSchema.pre(/^find/, function (next) {
-  if (this.options._recursed) {
-    return next();
-  }
-  this.populate({
-    path: "job",
-    options: { _recursed: true },
-  });
-  next();
-});
-
-userSchema.post(/^save/, async function (child) {
-  try {
-    if (!child.populated("job")) {
-      await child
-        .populate({
-          path: "job",
-          options: { _recursed: true },
-        })
-        .execPopulate();
-    }
-  } catch (err) {
-    console.log(err);
-  }
-});
-
 userSchema.methods = {
   view(full) {
     const view = {
@@ -153,7 +127,7 @@ userSchema.methods = {
           updated_at: this.updated_at,
           date_of_birth: this.date_of_birth,
           about: this.about,
-          job: this.job && this.job.name,
+          job: this.job,
           is_first_login: this.is_first_login,
           deleted_flag: this.deleted_flag,
           interests: this.interests,

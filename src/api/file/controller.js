@@ -13,13 +13,14 @@ export const create = async ({ user, bodymen: { body } }, res, next) => {
 };
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  File.count(query)
+  File.count({ ...query, deleted_flag: false })
     .then((count) =>
-      File.find(query, select, cursor)
-        .then((files) => ({
+      File.find({ ...query, deleted_flag: false }, select, cursor).then(
+        (files) => ({
           count,
           rows: files.map((file) => file.view()),
-        }))
+        })
+      )
     )
     .then(success(res))
     .catch(next);
